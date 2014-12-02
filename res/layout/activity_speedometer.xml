@@ -1,0 +1,262 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:layout_gravity = "center"
+    android:gravity = "center"
+    tools:context=".SpeedometerActivity" >
+
+    <!-- <EditText android:id="@+id/edit_message"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:hint="@string/edit_message" />
+    
+    <Button 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:text="@string/button_send"/>
+        -->
+        
+        <LinearLayout
+            android:layout_gravity = "center"
+            android:gravity = "center"
+            android:layout_weight="1"
+			android:layout_width="match_parent"
+    		android:layout_height="0dp">
+    		<RelativeLayout
+    		     android:layout_width="fill_parent"
+    		     android:layout_height="fill_parent">
+    		    <!-- <TextView
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textColor="#ffffff"
+        		android:text="@string/hello_world" /> -->
+        		<org.aurora.speedometer.RingView
+        		    android:id="@+id/ring"
+        		    android:layout_gravity = "center"
+        		    android:gravity = "center"
+                	android:layout_width="wrap_content"  
+                	android:layout_height="wrap_content" />
+        		<LinearLayout
+        		    android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:orientation="vertical"
+        			android:layout_centerInParent="true"
+        			android:layout_centerVertical="true">
+        			<LinearLayout
+           				android:layout_gravity = "center"
+            			android:layout_weight="2"
+						android:layout_width="wrap_content"
+    					android:layout_height="0dp">
+    					<TextView
+    					    android:id="@+id/distance"
+		        			android:layout_width="wrap_content"
+		        			android:layout_height="wrap_content"
+		        			android:textColor="#ffcc00"
+		        			android:textSize="60sp"
+		        			android:text="0" />
+		        		<TextView
+		        			android:layout_width="wrap_content"
+		        			android:layout_height="wrap_content"
+		        			android:textColor="#adadad"
+		        			android:textSize="40sp"
+		        			android:layout_alignParentBottom="true"
+		        			android:text=" km" />
+	        		</LinearLayout>
+	        		<LinearLayout
+	        		    android:layout_gravity = "center"
+            			android:gravity = "center"
+            			android:layout_weight="1"
+						android:layout_width="wrap_content"
+    					android:layout_height="0dp">
+	        		    <TextView
+	        		        android:id="@+id/duration"
+		        			android:layout_width="wrap_content"
+		        			android:layout_height="wrap_content"
+		        			android:textColor="#ffffff"
+		        			android:textSize="25sp"
+		        			android:text="00:00:00" />
+	        		</LinearLayout>
+        		</LinearLayout>
+    		</RelativeLayout>    		
+    	</LinearLayout>
+        <LinearLayout 
+            android:layout_weight="1"
+			android:layout_width="match_parent"
+			android:orientation="vertical"
+			android:layout_gravity = "center"
+    		android:gravity = "center"
+    		android:layout_height="0dp">
+    		<LinearLayout 
+            	android:layout_weight="1"
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+				android:layout_gravity = "center"
+    			android:gravity = "center"
+    			android:layout_height="0dp">
+    			<LinearLayout
+    			    android:orientation="vertical"
+            		android:layout_weight="1"
+					android:layout_width="0dp"
+					android:layout_gravity = "center"
+    				android:gravity = "center"
+    				android:layout_height="match_parent">
+    				<TextView
+        				android:layout_width="wrap_content"
+        				android:layout_height="wrap_content"
+        				android:textColor="#adadad"
+        				android:textSize="10sp"
+        				android:text="@string/current_speed" />
+    				<LinearLayout
+    				    android:orientation="horizontal"
+    				    android:layout_width="wrap_content"
+        				android:layout_height="wrap_content">
+    				    <TextView
+	    				    android:id="@+id/current_speed"
+	        				android:layout_width="wrap_content"
+	        				android:layout_height="wrap_content"
+	        				android:textColor="#ffffff"
+	        				android:textSize="17.5sp"
+	        				android:text="0" />
+    				    <TextView
+		        			android:layout_width="wrap_content"
+		        			android:layout_height="wrap_content"
+		        			android:textColor="#adadad"
+		        			android:textSize="12.5sp"
+		        			android:layout_alignParentBottom="true"
+		        			android:text=" km/h" />
+    				</LinearLayout>    				
+    			</LinearLayout>
+    			<LinearLayout
+    			    android:orientation="vertical"
+    			    android:layout_gravity = "center"
+    				android:gravity = "center"
+            		android:layout_weight="1"
+					android:layout_width="0dp"
+    				android:layout_height="match_parent">
+    				<TextView
+        				android:layout_width="wrap_content"
+        				android:layout_height="wrap_content"
+        				android:textColor="#adadad"
+        				android:textSize="10sp"
+        				android:text="@string/max_speed" />
+    				<LinearLayout
+    				    android:orientation="horizontal"
+    				    android:layout_width="wrap_content"
+        				android:layout_height="wrap_content">
+    				    <TextView
+	    				    android:id="@+id/max_speed"
+	        				android:layout_width="wrap_content"
+	        				android:layout_height="wrap_content"
+	        				android:textColor="#ffffff"
+	        				android:textSize="17.5sp"
+	        				android:text="0" />
+    				    <TextView
+		        			android:layout_width="wrap_content"
+		        			android:layout_height="wrap_content"
+		        			android:textColor="#adadad"
+		        			android:textSize="12.5sp"
+		        			android:layout_alignParentBottom="true"
+		        			android:text=" km/h" />
+    				</LinearLayout>
+    			</LinearLayout>
+    		</LinearLayout>
+    		<LinearLayout 
+            	android:layout_weight="1"
+				android:layout_width="match_parent"
+				android:orientation="horizontal"
+    			android:layout_height="0dp">
+    			<LinearLayout
+    			    android:orientation="vertical"
+    			    android:layout_gravity = "center"
+    				android:gravity = "center"
+            		android:layout_weight="1"
+					android:layout_width="0dp"
+    				android:layout_height="match_parent">
+    				<TextView
+        				android:layout_width="wrap_content"
+        				android:layout_height="wrap_content"
+        				android:textColor="#adadad"
+        				android:textSize="10sp"
+        				android:text="@string/average_speed" />
+    				<LinearLayout
+    				    android:orientation="horizontal"
+    				    android:layout_width="wrap_content"
+        				android:layout_height="wrap_content">
+    				    <TextView
+	    				    android:id="@+id/average_speed"
+	        				android:layout_width="wrap_content"
+	        				android:layout_height="wrap_content"
+	        				android:textColor="#ffffff"
+	        				android:textSize="17.5sp"
+	        				android:text="0" />
+    				    <TextView
+		        			android:layout_width="wrap_content"
+		        			android:layout_height="wrap_content"
+		        			android:textColor="#adadad"
+		        			android:textSize="12.5sp"
+		        			android:layout_alignParentBottom="true"
+		        			android:text=" km/h" />
+    				</LinearLayout>
+    			</LinearLayout>
+    			<LinearLayout 
+    			    android:orientation="vertical"
+    			    android:layout_gravity = "center"
+    				android:gravity = "center"
+            		android:layout_weight="1"
+					android:layout_width="0dp"
+    				android:layout_height="match_parent">
+    				<TextView
+        				android:layout_width="wrap_content"
+        				android:layout_height="wrap_content"
+        				android:textColor="#adadad"
+        				android:textSize="10sp"
+        				android:text="@string/rest_time" />
+   				    <TextView
+    				    android:id="@+id/rest_time"
+        				android:layout_width="wrap_content"
+        				android:layout_height="wrap_content"
+        				android:textColor="#ffffff"
+        				android:textSize="17.5sp"
+        				android:text="00:00:00" />
+    			</LinearLayout>
+    		</LinearLayout>
+    		<LinearLayout 
+            	android:layout_weight="1"
+				android:layout_width="match_parent"
+    			android:layout_height="0dp">
+    		</LinearLayout>
+    		<LinearLayout
+    		    android:layout_gravity = "center"
+    			android:gravity = "center"
+            	android:layout_weight="1"
+				android:layout_width="match_parent"
+    			android:layout_height="0dp">
+    			<Button
+    			    android:id="@+id/button_start"
+    			    android:orientation="vertical"
+    			    android:layout_gravity = "center"
+    			    android:gravity = "center"
+    			    android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:text="@string/button_start"
+        			android:onClick="startRecord" />
+    		</LinearLayout>
+    		<!-- <TextView
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textColor="#ffffff"
+        		android:text="@string/hello_world" /> -->
+    	</LinearLayout>
+    <!-- <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:text="@string/hello_world" /> -->
+
+</LinearLayout>

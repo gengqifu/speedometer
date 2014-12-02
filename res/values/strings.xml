@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">"speedometer "</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_start">Start</string>
+    <string name="button_stop">Stop</string>
+    <string name="current_speed">Current Speed</string>
+    <string name="max_speed">Max Speed</string>
+    <string name="average_speed">Average Speed</string>
+    <string name="rest_time">Rest Time</string>
+
+</resources>
