@@ -136,7 +136,7 @@ public class SpeedometerActivity extends Activity implements
 	    if( mCurrentSpeed > mMaxSpeed ) {
 		mMaxSpeed = mCurrentSpeed;
 	    }
-	    mAverageSpeed = (float)mDistance / ( mHour + mMinute/60 + (float)mSecond/3600 );
+	    mAverageSpeed = (float)mDistance / ( (float)mHour + mMinute/60.0f + mSecond/3600.0f );
 	}
 	
 	mCurrentSpeedView.setText(formatDistance(mCurrentSpeed));
