@@ -119,6 +119,12 @@ public class SpeedometerActivity extends Activity implements
 	    mStartButton.setClickable(true);
 	    return;
 	}
+	
+	// Have not start tracing
+	if( !mIfStartRecord ) {
+	    return;
+	}
+	
 	Log.d(TAG, "location - " + location.getLongitude() + ", " + location.getLatitude());
 	
 	if( mPreviousLocation == null ) {
@@ -136,7 +142,7 @@ public class SpeedometerActivity extends Activity implements
 	    if( mCurrentSpeed > mMaxSpeed ) {
 		mMaxSpeed = mCurrentSpeed;
 	    }
-	    mAverageSpeed = (float)mDistance / ( (float)mHour + mMinute/60.0f + mSecond/3600.0f );
+	    mAverageSpeed = (float)mDistance / ( (float)mHour + (float)mMinute/60.0f + (float)mSecond/3600.0f );
 	}
 	
 	mCurrentSpeedView.setText(formatDistance(mCurrentSpeed));
