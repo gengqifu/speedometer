@@ -7,6 +7,8 @@
     <string name="edit_message">Enter a message</string>
     <string name="button_start">Start</string>
     <string name="button_stop">Stop</string>
+    <string name="button_pause">Pause</string>
+    <string name="button_continue">Continue</string>
     <string name="current_speed">Current Speed</string>
     <string name="max_speed">Max Speed</string>
     <string name="average_speed">Average Speed</string>

@@ -237,15 +237,64 @@
             	android:layout_weight="1"
 				android:layout_width="match_parent"
     			android:layout_height="0dp">
-    			<Button
-    			    android:id="@+id/button_start"
-    			    android:orientation="vertical"
+    			<FrameLayout 
     			    android:layout_gravity = "center"
-    			    android:gravity = "center"
-    			    android:layout_width="wrap_content"
-        			android:layout_height="wrap_content"
-        			android:text="@string/button_start"
-        			android:onClick="startRecord" />
+    				android:gravity = "center"
+					android:layout_width="match_parent"
+    				android:layout_height="match_parent">
+	    			<Button
+	    			    android:id="@+id/button_start"
+	    			    android:orientation="vertical"
+	    			    android:layout_gravity = "center"
+	    			    android:gravity = "center"
+	    			    android:layout_width="wrap_content"
+	        			android:layout_height="wrap_content"
+	        			android:text="@string/button_start"
+	        			android:onClick="startRecord" />
+	    			<LinearLayout
+	    			    android:id="@+id/pause_and_stop"
+	    		    	android:layout_gravity = "center"
+	    				android:gravity = "center"
+	            		android:orientation="horizontal"
+						android:layout_width="match_parent"
+	    				android:layout_height="match_parent"
+	    				android:visibility="invisible">
+		    			<LinearLayout
+		    			    android:orientation="vertical"
+		            		android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_gravity = "center"
+		    				android:gravity = "center"
+		    				android:layout_height="match_parent">
+	    				    <Button
+	    			    		android:id="@+id/button_pause"
+	    			    		android:orientation="vertical"
+	    			    		android:layout_gravity = "center"
+	    			    		android:gravity = "center"
+	    			    		android:layout_width="wrap_content"
+	        					android:layout_height="wrap_content"
+	        					android:text="@string/button_pause"
+	        					android:onClick="pauseRecord" />
+	    				</LinearLayout>
+	    				<LinearLayout
+		    			    android:orientation="vertical"
+		            		android:layout_weight="1"
+							android:layout_width="0dp"
+							android:layout_gravity = "center"
+		    				android:gravity = "center"
+		    				android:layout_height="match_parent">
+	    				    <Button
+	    			    		android:id="@+id/button_stop"
+	    			    		android:orientation="vertical"
+	    			    		android:layout_gravity = "center"
+	    			    		android:gravity = "center"
+	    			    		android:layout_width="wrap_content"
+	        					android:layout_height="wrap_content"
+	        					android:text="@string/button_stop"
+	        					android:onClick="stopRecord" />
+	    				</LinearLayout>
+	    			</LinearLayout>
+	    		</FrameLayout>
     		</LinearLayout>
     		<!-- <TextView
         		android:layout_width="wrap_content"

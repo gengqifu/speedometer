@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.location.GpsStatus;
 
@@ -20,13 +21,20 @@ public class SpeedometerActivity extends Activity implements
     private int mSecond = 0;
     private int mMinute = 0;
     private int mHour = 0;
+    private int mRestSecond = 0;
+    private int mRestMinute = 0;
+    private int mRestHour = 0;
     private TextView mDurationView;
     private RingView mRingView;
     private TextView mDistanceView;
     private TextView mCurrentSpeedView;
     private TextView mMaxSpeedView;
     private TextView mAverageSpeedView;
+    private TextView mRestView;
     private Button mStartButton;
+    private LinearLayout mPauseAndStopView;
+    private Button mPauseButton;
+    private Button mStopButton;
     
     private Location mPreviousLocation = null;
     private Location mCurrentLocation = null;
@@ -37,12 +45,59 @@ public class SpeedometerActivity extends Activity implements
     private float mMaxSpeed = 0.0f;
     private float mAverageSpeed = 0.0f;
     
-    private boolean mIfStartRecord = false;
-    private boolean mIfGpsReady = false;
+    private boolean mIfStartRecord = false; // If tracing started
+    private boolean mIfGpsReady = false; // If GPS ready
+    private boolean mPaused = false; // If tracing paused
     
     private Handler mHandler = new Handler();
     
-    Runnable runnable = new Runnable() {
+    class myRunnable implements Runnable {
+        @Override 
+        public void run() {
+            mSecond++; 
+            if( mSecond == 60 ) {
+        	mMinute++;
+        	mSecond = 0;
+            }
+            if( mMinute == 60 ) {
+        	mHour++;
+        	mMinute = 0;
+            }
+            
+            mDurationView.setText(formatTime(mHour, mMinute, mSecond)); 
+            mHandler.postDelayed(this, 1000); 
+        }
+        
+        private String formatTime(int hour, int minute, int second) {
+            String result = "";
+            
+            if( hour < 10 ) {
+        	result += "0" + hour + ":";
+            } else {
+        	result += hour + ":";
+            }
+            
+            if( minute < 10 ) {
+        	result += "0" + minute + ":";
+            } else {
+        	result += minute + ":";
+            }
+            
+            if( second < 10 ) {
+        	result += "0" + second;
+            } else {
+        	result += second;
+            }
+            
+            return result;
+        }
+    
+    }
+    
+    //myRunnable running = new myRunnable();
+    //myRunnable rest = new myRunnable();
+    
+    Runnable running = new Runnable() {
         @Override 
         public void run() {
             mSecond++; 
@@ -83,6 +138,48 @@ public class SpeedometerActivity extends Activity implements
             return result;
         }
     };
+    
+    Runnable rest = new Runnable() {
+        @Override 
+        public void run() {
+            mRestSecond++; 
+            if( mRestSecond == 60 ) {
+        	mRestMinute++;
+        	mRestSecond = 0;
+            }
+            if( mRestMinute == 60 ) {
+        	mRestHour++;
+        	mRestMinute = 0;
+            }
+            
+            mRestView.setText(formatTime(mRestHour, mRestMinute, mRestSecond)); 
+            mHandler.postDelayed(this, 1000); 
+        }
+        
+        private String formatTime(int hour, int minute, int second) {
+            String result = "";
+            
+            if( hour < 10 ) {
+        	result += "0" + hour + ":";
+            } else {
+        	result += hour + ":";
+            }
+            
+            if( minute < 10 ) {
+        	result += "0" + minute + ":";
+            } else {
+        	result += minute + ":";
+            }
+            
+            if( second < 10 ) {
+        	result += "0" + second;
+            } else {
+        	result += second;
+            }
+            
+            return result;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +193,10 @@ public class SpeedometerActivity extends Activity implements
 	mMaxSpeedView = (TextView)findViewById(R.id.max_speed);
 	mAverageSpeedView = (TextView)findViewById(R.id.average_speed);
 	mStartButton = (Button)findViewById(R.id.button_start);
+	mRestView = (TextView)findViewById(R.id.rest_time);
+	mPauseAndStopView = (LinearLayout)findViewById(R.id.pause_and_stop);
+	mPauseButton = (Button)findViewById(R.id.button_pause);
+	mStopButton = (Button)findViewById(R.id.button_stop);
 	
 	mStartButton.setClickable(false);
 	//mHandler.postDelayed(runnable, 1000);
@@ -120,8 +221,8 @@ public class SpeedometerActivity extends Activity implements
 	    return;
 	}
 	
-	// Have not start tracing
-	if( !mIfStartRecord ) {
+	// Have not start tracing or tracing paused
+	if( !mIfStartRecord || mPaused ) {
 	    return;
 	}
 	
@@ -176,14 +277,69 @@ public class SpeedometerActivity extends Activity implements
     public void startRecord(View view) {
 	mIfStartRecord = !mIfStartRecord;
 	if( mIfStartRecord ) {
-	    mStartButton.setText(R.string.button_stop);
-	    mHandler.postDelayed(runnable, 1000);
+	    //mStartButton.setText(R.string.button_stop);
+	    mStartButton.setVisibility(View.INVISIBLE);
+	    mPauseAndStopView.setVisibility(View.VISIBLE);
+	    mHandler.postDelayed(running, 1000);
+	    mHandler.removeCallbacks(rest);
 	} else {
-	    mStartButton.setText(R.string.button_start);
-	    mHandler.removeCallbacks(runnable);
+	    //mStartButton.setText(R.string.button_start);
+	    mStartButton.setVisibility(View.VISIBLE);
+	    mPauseAndStopView.setVisibility(View.INVISIBLE);
+	    mHandler.removeCallbacks(running);
+	    mHandler.postDelayed(rest, 1000);
 	}
 	
 	mLocationManager.recordLocation(mIfStartRecord);
+    }
+    
+    public void pauseRecord(View view) {
+	mPaused = !mPaused;
+	if( mPaused ) {
+	    mPauseButton.setText(R.string.button_continue);
+	    mHandler.removeCallbacks(running);
+	    mHandler.postDelayed(rest, 1000);
+	} else {
+	    mPauseButton.setText(R.string.button_pause);
+	    mHandler.removeCallbacks(rest);
+	    mHandler.postDelayed(running, 1000);
+	}
+    }
+    
+    public void stopRecord(View viw) {
+	mIfStartRecord = false;
+	mHandler.removeCallbacks(running);
+	mHandler.removeCallbacks(rest);
+	initialize();
+	resetUI();
+    }
+    
+    public void initialize() {
+	mSecond = 0;
+	mMinute = 0;
+	mHour = 0;
+	mRestSecond = 0;
+	mRestMinute = 0;
+	mRestHour = 0;
+	mSpeed = 0.0f;
+	mDistance = 0.0d;
+	mCurrentSpeed = 0.0f;
+	mMaxSpeed = 0.0f;
+	mAverageSpeed = 0.0f;
+	mIfStartRecord = false;
+	mIfGpsReady = false;
+	mPaused = false;
+    }
+    
+    private void resetUI() {
+	mStartButton.setVisibility(View.VISIBLE);
+	mPauseAndStopView.setVisibility(View.INVISIBLE);
+	mCurrentSpeedView.setText(formatDistance(mCurrentSpeed));
+	mMaxSpeedView.setText(formatDistance(mMaxSpeed));
+	mAverageSpeedView.setText(formatDistance(mAverageSpeed));
+	mDurationView.setText(formatTime(mHour, mMinute, mSecond)); 
+	mRestView.setText(formatTime(mRestHour, mRestMinute, mRestSecond));
+	mDistanceView.setText(formatDistance(mDistance));
     }
     
     // implement this method from interface GpsStatus.Listener
@@ -196,5 +352,29 @@ public class SpeedometerActivity extends Activity implements
 		    Log.d(TAG, "GPS_EVENT_STARTED");
 		    mStartButton.setClickable(true);
 	}
+    }
+    
+    public String formatTime(int hour, int minute, int second) {
+        String result = "";
+        
+        if( hour < 10 ) {
+    	result += "0" + hour + ":";
+        } else {
+    	result += hour + ":";
+        }
+        
+        if( minute < 10 ) {
+    	result += "0" + minute + ":";
+        } else {
+    	result += minute + ":";
+        }
+        
+        if( second < 10 ) {
+    	result += "0" + second;
+        } else {
+    	result += second;
+        }
+        
+        return result;
     }
 }
