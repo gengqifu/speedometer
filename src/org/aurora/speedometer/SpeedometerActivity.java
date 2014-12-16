@@ -25,7 +25,7 @@ public class SpeedometerActivity extends Activity implements
     
     private static final String TAG = "SpeedometerActivity";
     
-    private static final int FLING_MIN_DISTANCE = 120;
+    private static final int FLING_MIN_DISTANCE = 60;
     private static final int FLING_MIN_VELOCITY = 120;
     
     private int mSecond = 0;
