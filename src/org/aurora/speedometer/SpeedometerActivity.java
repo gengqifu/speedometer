@@ -2,21 +2,31 @@ package org.aurora.speedometer;
 
 import java.text.DecimalFormat;
 
+import android.gesture.GestureOverlayView.OnGestureListener;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
+import android.content.Intent;
+import android.view.GestureDetector;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.location.GpsStatus;
 
 public class SpeedometerActivity extends Activity implements 
-	LocationManager.Listener, GpsStatus.Listener {
+	LocationManager.Listener, GpsStatus.Listener, OnTouchListener, 
+	GestureDetector.OnGestureListener {
     
     private static final String TAG = "SpeedometerActivity";
+    
+    private static final int FLING_MIN_DISTANCE = 120;
+    private static final int FLING_MIN_VELOCITY = 120;
     
     private int mSecond = 0;
     private int mMinute = 0;
@@ -44,6 +54,8 @@ public class SpeedometerActivity extends Activity implements
     private float mCurrentSpeed = 0.0f;
     private float mMaxSpeed = 0.0f;
     private float mAverageSpeed = 0.0f;
+    
+    private GestureDetector mGestureDetector;
     
     private boolean mIfStartRecord = false; // If tracing started
     private boolean mIfGpsReady = false; // If GPS ready
@@ -205,6 +217,11 @@ public class SpeedometerActivity extends Activity implements
 	
 	// Start to get locations from gps services
 	mLocationManager.recordLocation(true);
+	
+	mGestureDetector = new GestureDetector(this, this);
+	LinearLayout speedometer = (LinearLayout)findViewById(R.id.speedometer_layout);
+	speedometer.setOnTouchListener(this);
+	speedometer.setLongClickable(true);
     }
 
     @Override
@@ -376,5 +393,48 @@ public class SpeedometerActivity extends Activity implements
         }
         
         return result;
+    }
+    
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+	return mGestureDetector.onTouchEvent(event);
+    }
+    
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+	if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE) {
+	    Intent intent = new Intent(SpeedometerActivity.this,MapActivity.class);
+	    startActivity(intent);
+	    Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
+	} else if (e2.getX()-e1.getX() > FLING_MIN_DISTANCE) {
+	    Intent intent = new Intent(SpeedometerActivity.this, MapActivity.class);
+	    startActivity(intent);
+	    Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
+	}
+	
+	return true;
+    }
+    
+    @Override  
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+  
+    @Override  
+    public void onLongPress(MotionEvent e) {  
+    }  
+  
+    @Override  
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {  
+        return false;  
+    }  
+  
+    @Override  
+    public void onShowPress(MotionEvent e) {  
+    }  
+  
+    @Override  
+    public boolean onSingleTapUp(MotionEvent e) {  
+        return false;  
     }
 }

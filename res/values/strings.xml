@@ -13,5 +13,6 @@
     <string name="max_speed">Max Speed</string>
     <string name="average_speed">Average Speed</string>
     <string name="rest_time">Rest Time</string>
+    <string name="title_activity_map">MapActivity</string>
 
 </resources>
