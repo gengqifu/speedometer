@@ -8,20 +8,6 @@
     android:layout_gravity = "center"
     android:gravity = "center"
     tools:context=".SpeedometerActivity" >
-
-    <!-- <EditText android:id="@+id/edit_message"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:hint="@string/edit_message" />
-    
-    <Button 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:text="@string/button_send"/>
-        -->
         
         <LinearLayout
             android:layout_gravity = "center"
@@ -32,11 +18,39 @@
     		<RelativeLayout
     		     android:layout_width="fill_parent"
     		     android:layout_height="fill_parent">
-    		    <!-- <TextView
-        		android:layout_width="wrap_content"
-        		android:layout_height="wrap_content"
-        		android:textColor="#ffffff"
-        		android:text="@string/hello_world" /> -->
+    		     <LinearLayout 
+    		     	android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentLeft="true"
+					android:layout_alignParentTop="true"
+					android:layout_margin="20dp">
+					<FrameLayout 
+						android:layout_width="wrap_content"
+        				android:layout_height="wrap_content">
+					    <ImageView  
+        					android:id="@+id/gps_circle"  
+        					android:layout_width="wrap_content"  
+        					android:layout_height="wrap_content"  
+        					android:src="@drawable/img_gps_circle"  
+        					android:scaleType="center">
+        				</ImageView>
+        				<ImageView  
+        					android:id="@+id/gps_circle_loading"  
+        					android:layout_width="wrap_content"  
+        					android:layout_height="wrap_content"  
+        					android:src="@drawable/img_gps_circle_loading"  
+        					android:scaleType="center">
+        				</ImageView>
+        				<TextView
+        					android:layout_width="wrap_content"
+        					android:layout_height="wrap_content"
+        					android:textColor="#adadad"
+		        			android:textSize="12.5sp"
+        					android:text="GPS"
+        					android:layout_gravity="center"
+            				android:gravity="center" />
+					</FrameLayout>
+    		     </LinearLayout>
         		<org.aurora.speedometer.RingView
         		    android:id="@+id/ring"
         		    android:layout_gravity = "center"
@@ -297,16 +311,6 @@
 	    			</LinearLayout>
 	    		</FrameLayout>
     		</LinearLayout>
-    		<!-- <TextView
-        		android:layout_width="wrap_content"
-        		android:layout_height="wrap_content"
-        		android:textColor="#ffffff"
-        		android:text="@string/hello_world" /> -->
     	</LinearLayout>
-    <!-- <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:text="@string/hello_world" /> -->
 
 </LinearLayout>

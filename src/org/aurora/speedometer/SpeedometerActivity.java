@@ -13,7 +13,11 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +49,10 @@ public class SpeedometerActivity extends Activity implements
     private LinearLayout mPauseAndStopView;
     private Button mPauseButton;
     private Button mStopButton;
+    private ImageView mGpsCircleView;
+    private ImageView mGpsLoadingView;
+
+    private Animation mGpsLoadingAnim;
     
     private Location mPreviousLocation = null;
     private Location mCurrentLocation = null;
@@ -209,6 +217,8 @@ public class SpeedometerActivity extends Activity implements
 	mPauseAndStopView = (LinearLayout)findViewById(R.id.pause_and_stop);
 	mPauseButton = (Button)findViewById(R.id.button_pause);
 	mStopButton = (Button)findViewById(R.id.button_stop);
+	mGpsCircleView = (ImageView)findViewById(R.id.gps_circle);
+	mGpsLoadingView = (ImageView)findViewById(R.id.gps_circle_loading);
 	
 	mStartButton.setClickable(false);
 	//mHandler.postDelayed(runnable, 1000);
@@ -222,6 +232,16 @@ public class SpeedometerActivity extends Activity implements
 	LinearLayout speedometer = (LinearLayout)findViewById(R.id.speedometer_layout);
 	speedometer.setOnTouchListener(this);
 	speedometer.setLongClickable(true);
+
+	// Gps loading animation
+	mGpsLoadingAnim = AnimationUtils.loadAnimation(this, R.anim.gps_loading);
+	LinearInterpolator lin = new LinearInterpolator();
+	mGpsLoadingAnim.setInterpolator(lin);
+
+	// Start gps loading animation
+	if (mGpsLoadingAnim != null) {
+	    mGpsLoadingView.startAnimation(mGpsLoadingAnim);
+	}
     }
 
     @Override
@@ -235,6 +255,8 @@ public class SpeedometerActivity extends Activity implements
 	if( !mIfGpsReady ) {
 	    mIfGpsReady = true;
 	    mStartButton.setClickable(true);
+	    mGpsLoadingView.clearAnimation();
+	    mGpsLoadingView.setVisibility(View.GONE);
 	    return;
 	}
 	
