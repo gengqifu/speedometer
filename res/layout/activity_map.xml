@@ -8,9 +8,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MapActivity" >
 
-    <TextView
+    <!-- <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="@string/hello_world" /> -->
+    
+    <com.baidu.mapapi.map.MapView  
+	    android:id="@+id/bmapView"  
+	    android:layout_width="fill_parent"  
+	    android:layout_height="fill_parent"  
+	    android:clickable="true" />
 
 </RelativeLayout>
