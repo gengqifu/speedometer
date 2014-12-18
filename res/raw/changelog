@@ -1,1 +1,5 @@
-0.1.1: Add gps loading animation.
+0.1.2:
+- Add database. Saving tracing data to database.
+
+0.1.1: 
+- Add gps loading animation.
