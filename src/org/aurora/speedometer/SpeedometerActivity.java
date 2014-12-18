@@ -455,7 +455,7 @@ public class SpeedometerActivity extends Activity implements
 	    startActivity(intent);
 	    Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
 	} else if (e2.getX()-e1.getX() > FLING_MIN_DISTANCE) {
-	    Intent intent = new Intent(SpeedometerActivity.this, MapActivity.class);
+	    Intent intent = new Intent(SpeedometerActivity.this, HistoryActivity.class);
 	    startActivity(intent);
 	    Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
 	}

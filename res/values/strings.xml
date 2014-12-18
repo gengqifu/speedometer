@@ -14,5 +14,9 @@
     <string name="average_speed">Average Speed</string>
     <string name="rest_time">Rest Time</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="cycling_history">History</string>
+    <string name="cycling_current">Current</string>
+    <string name="cycling_map">Map</string>
+    <string name="title_activity_history">History</string>
 
 </resources>
