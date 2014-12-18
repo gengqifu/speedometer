@@ -1,4 +1,4 @@
-package org.aurora.speedometer;
+package org.aurora.speedometer.utils;
 
 public final class Log {
 

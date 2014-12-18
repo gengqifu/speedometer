@@ -4,6 +4,9 @@ import java.text.DecimalFormat;
 
 import org.aurora.speedometer.data.DbAdapter;
 import org.aurora.speedometer.data.Record;
+import org.aurora.speedometer.location.LocationManager;
+import org.aurora.speedometer.ui.RingView;
+import org.aurora.speedometer.utils.Log;
 
 import android.gesture.GestureOverlayView.OnGestureListener;
 import android.location.Location;

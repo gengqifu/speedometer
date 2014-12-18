@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.aurora.speedometer;
+package org.aurora.speedometer.location;
+
+import org.aurora.speedometer.utils.Log;
 
 import android.app.PendingIntent;
 import android.app.PendingIntent.CanceledException;

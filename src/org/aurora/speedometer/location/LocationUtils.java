@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.aurora.speedometer;
+package org.aurora.speedometer.location;
 
 import android.content.Context;
 import android.content.Intent;

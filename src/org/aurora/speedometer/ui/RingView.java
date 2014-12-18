@@ -1,4 +1,4 @@
-package org.aurora.speedometer;
+package org.aurora.speedometer.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;

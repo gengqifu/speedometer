@@ -7,7 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import org.aurora.speedometer.Log;
+import org.aurora.speedometer.utils.Log;
 
 public class DbAdapter
 {
