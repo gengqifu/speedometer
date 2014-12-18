@@ -2,6 +2,9 @@ package org.aurora.speedometer;
 
 import java.text.DecimalFormat;
 
+import org.aurora.speedometer.data.DbAdapter;
+import org.aurora.speedometer.data.Record;
+
 import android.gesture.GestureOverlayView.OnGestureListener;
 import android.location.Location;
 import android.os.Bundle;
@@ -63,6 +66,10 @@ public class SpeedometerActivity extends Activity implements
     private float mMaxSpeed = 0.0f;
     private float mAverageSpeed = 0.0f;
     
+    private long mStartTime;
+
+    private DbAdapter mDbAdapter;
+
     private GestureDetector mGestureDetector;
     
     private boolean mIfStartRecord = false; // If tracing started
@@ -242,6 +249,9 @@ public class SpeedometerActivity extends Activity implements
 	if (mGpsLoadingAnim != null) {
 	    mGpsLoadingView.startAnimation(mGpsLoadingAnim);
 	}
+
+	mDbAdapter = new DbAdapter(this);
+	mDbAdapter.open();
     }
 
     @Override
@@ -316,6 +326,7 @@ public class SpeedometerActivity extends Activity implements
     public void startRecord(View view) {
 	mIfStartRecord = !mIfStartRecord;
 	if( mIfStartRecord ) {
+	    mStartTime = System.currentTimeMillis();
 	    //mStartButton.setText(R.string.button_stop);
 	    mStartButton.setVisibility(View.INVISIBLE);
 	    mPauseAndStopView.setVisibility(View.VISIBLE);
@@ -349,6 +360,18 @@ public class SpeedometerActivity extends Activity implements
 	mIfStartRecord = false;
 	mHandler.removeCallbacks(running);
 	mHandler.removeCallbacks(rest);
+
+	Record record = new Record();
+	record.setStartTime(mStartTime);
+	record.setEndTime(System.currentTimeMillis());
+	record.setDistance((float)mDistance);
+	record.setRunningTime(formatTime(mHour, mMinute, mSecond));
+	record.setRestTime(formatTime(mRestHour, mRestMinute, mRestSecond));
+	record.setMaxSpeed(mMaxSpeed);
+	record.setAverageSpeed(mAverageSpeed);
+	long newRowId = mDbAdapter.insertRecord(record);
+	Log.d(TAG, "newRowId " + newRowId);
+
 	initialize();
 	resetUI();
     }
