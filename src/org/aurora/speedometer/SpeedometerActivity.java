@@ -453,10 +453,12 @@ public class SpeedometerActivity extends Activity implements
 	if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE) {
 	    Intent intent = new Intent(SpeedometerActivity.this,MapActivity.class);
 	    startActivity(intent);
+	    overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
 	    Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
 	} else if (e2.getX()-e1.getX() > FLING_MIN_DISTANCE) {
 	    Intent intent = new Intent(SpeedometerActivity.this, HistoryActivity.class);
 	    startActivity(intent);
+	    overridePendingTransition(R.anim.in_from_left, R.anim.out_from_right);
 	    Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
 	}
 	
