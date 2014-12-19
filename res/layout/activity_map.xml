@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -8,15 +9,26 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MapActivity" >
 
-    <!-- <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" /> -->
-    
     <com.baidu.mapapi.map.MapView  
 	    android:id="@+id/bmapView"  
 	    android:layout_width="fill_parent"  
 	    android:layout_height="fill_parent"  
 	    android:clickable="true" />
 
+    <ImageView
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentLeft="true"
+    	android:layout_centerVertical="true"
+    	android:src="@drawable/img_left_arrow" />
+
+    <LinearLayout
+        android:id="@+id/map_left"
+        android:orientation="vertical"
+        android:layout_width="60dp"
+    	android:layout_height="fill_parent"
+    	android:background="@android:color/transparent"
+    	android:layout_alignParentLeft="true">        
+    </LinearLayout>
+    
 </RelativeLayout>

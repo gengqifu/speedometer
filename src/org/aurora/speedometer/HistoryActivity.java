@@ -49,7 +49,6 @@ public class HistoryActivity extends Activity implements
     
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-	Log.d(TAG, "e1.x - " + e1.getX() + ", e2.x - " + e2.getX());
 	if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE) {
 	    Intent intent = new Intent(HistoryActivity.this, SpeedometerActivity.class);
 	    startActivity(intent);
