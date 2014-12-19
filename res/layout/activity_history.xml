@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/history_layout"
+    android:background="#000000"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -8,11 +9,144 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".HistoryActivity" >
-
-    <TextView
+    
+    <LinearLayout
+        android:id="@+id/total_message"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_height="wrap_content">
+        <TextView
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:textColor="#7d7d7d"
+        	android:textSize="15sp"
+        	android:text="@string/record_total_prefix" />
+        <TextView
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:textColor="#7d7d7d"
+        	android:textSize="15sp"
+        	android:text="2" />
+        <TextView
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:textColor="#7d7d7d"
+        	android:textSize="15sp"
+        	android:text="@string/record_total_suffix" />
+    </LinearLayout>
+    
+    <View
+        android:id="@+id/history_first_line"
+        android:layout_below="@id/total_message"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#696969" />
+    
+    <LinearLayout
+        android:id="@+id/summary_info"
+        android:layout_below="@id/history_first_line"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+        	android:layout_height="wrap_content">
+            <TextView
+            	android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textColor="#7d7d7d"
+        		android:textSize="15sp"
+				android:text="@string/total_distance"
+				android:lines="1" />
+            <LinearLayout 
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+                <TextView
+	            	android:layout_width="wrap_content"
+	        		android:layout_height="wrap_content"
+	        		android:textColor="#ffffff"
+	        		android:textSize="30sp"
+					android:text="0" />
+                <TextView
+	            	android:layout_width="wrap_content"
+	        		android:layout_height="wrap_content"
+	        		android:textColor="#7d7d7d"
+	        		android:textSize="30sp"
+					android:text="km" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+        	android:layout_height="wrap_content">
+            <TextView
+            	android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textColor="#7d7d7d"
+        		android:textSize="15sp"
+        		android:lines="1"
+				android:text="@string/total_time" />
+			<TextView
+           		android:layout_width="wrap_content"
+       			android:layout_height="wrap_content"
+       			android:textColor="#ffffff"
+       			android:textSize="30sp"
+				android:text="00:00:00" />
+        </LinearLayout>
+    </LinearLayout>
+    
+    <View
+        android:id="@+id/history_second_line"
+        android:layout_below="@id/summary_info"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#696969" />
+    
+    <LinearLayout 
+        android:orientation="vertical"
+        android:id="@+id/history_left_menu"
+        android:layout_below="@id/history_second_line"
+        android:layout_marginTop="15dp"
+        android:layout_width="60dp"
+        android:layout_height="480dp"></LinearLayout>
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/history_right_menu"
+        android:layout_toRightOf="@id/history_left_menu"
+        android:layout_below="@id/history_second_line"
+        android:layout_margin="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+			android:layout_width="wrap_content"
+       		android:layout_height="wrap_content"
+       		android:textColor="#7d7d7d"
+       		android:textSize="15sp"
+			android:text="@string/recent_cycling" />
+        
+        <View
+	        android:layout_marginTop="5dp"
+	        android:layout_width="540dp"
+	        android:layout_height="1dip"
+	        android:background="#696969" />
+        
+        <LinearLayout
+            android:orientation="vertical"
+        	android:id="@+id/history_list"
+        	android:layout_margin="5dp"
+        	android:layout_width="540dp"
+        	android:layout_height="480dp">            
+        </LinearLayout>
+        
+    </LinearLayout>
     
     <ImageView
     	android:layout_width="wrap_content"
