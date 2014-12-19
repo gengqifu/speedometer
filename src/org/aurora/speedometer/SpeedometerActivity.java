@@ -25,6 +25,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.location.GpsStatus;
@@ -57,6 +58,7 @@ public class SpeedometerActivity extends Activity implements
     private Button mStopButton;
     private ImageView mGpsCircleView;
     private ImageView mGpsLoadingView;
+    private RelativeLayout mSpeedometerView;
 
     private Animation mGpsLoadingAnim;
     
@@ -239,9 +241,9 @@ public class SpeedometerActivity extends Activity implements
 	mLocationManager.recordLocation(true);
 	
 	mGestureDetector = new GestureDetector(this, this);
-	LinearLayout speedometer = (LinearLayout)findViewById(R.id.speedometer_layout);
-	speedometer.setOnTouchListener(this);
-	speedometer.setLongClickable(true);
+	mSpeedometerView = (RelativeLayout)findViewById(R.id.speedometer_layout);
+	mSpeedometerView.setOnTouchListener(this);
+	mSpeedometerView.setLongClickable(true);
 
 	// Gps loading animation
 	mGpsLoadingAnim = AnimationUtils.loadAnimation(this, R.anim.gps_loading);

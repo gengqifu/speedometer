@@ -1,71 +1,26 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/speedometer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    android:orientation="vertical"
-    android:layout_gravity = "center"
-    android:gravity = "center"
     tools:context=".SpeedometerActivity" >
         
+    <LinearLayout
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:background="#000000"
+    	android:orientation="vertical"
+    	android:layout_gravity = "center"
+    	android:gravity = "center">
         <LinearLayout
             android:layout_gravity = "center"
             android:gravity = "center"
-            android:layout_weight="5"
+            android:layout_weight="1"
             android:orientation="vertical"
 			android:layout_width="match_parent"
     		android:layout_height="0dp">
-    		<LinearLayout 
-    			android:layout_gravity = "center"
-            	android:gravity = "center"
-            	android:layout_weight="1"
-				android:layout_width="match_parent"
-				android:orientation="horizontal"
-    			android:layout_height="0dp">
-    			<LinearLayout 
-    			    android:layout_gravity = "center"
-            		android:gravity = "center"
-            		android:layout_weight="1"
-					android:layout_width="0dp"
-					android:orientation="vertical"
-    				android:layout_height="match_parent">
-	    		    <TextView
-	        			android:layout_width="wrap_content"
-	        			android:layout_height="wrap_content"
-	        			android:textColor="#808080"
-		        		android:textSize="20sp"
-	        			android:text="@string/cycling_history" />
-    		    </LinearLayout>
-    		    <LinearLayout 
-    			    android:layout_gravity = "center"
-            		android:gravity = "center"
-            		android:layout_weight="1"
-					android:layout_width="0dp"
-					android:orientation="vertical"
-    				android:layout_height="match_parent">
-	    		    <TextView
-	        			android:layout_width="wrap_content"
-	        			android:layout_height="wrap_content"
-	        			android:textColor="#ffffff"
-		        		android:textSize="20sp"
-	        			android:text="@string/cycling_current" />
-    		    </LinearLayout>
-    		    <LinearLayout 
-    			    android:layout_gravity = "center"
-            		android:gravity = "center"
-            		android:layout_weight="1"
-					android:layout_width="0dp"
-					android:orientation="vertical"
-    				android:layout_height="match_parent">
-	    		    <TextView
-	        			android:layout_width="wrap_content"
-	        			android:layout_height="wrap_content"
-	        			android:textColor="#808080"
-		        		android:textSize="20sp"
-	        			android:text="@string/cycling_map" />
-    		    </LinearLayout>
-    		</LinearLayout>
+    		
     		<RelativeLayout
     		     android:layout_width="fill_parent"
     		     android:layout_height="0dp"
@@ -153,7 +108,7 @@
     		</RelativeLayout>    		
     	</LinearLayout>
         <LinearLayout 
-            android:layout_weight="4"
+            android:layout_weight="1"
 			android:layout_width="match_parent"
 			android:orientation="vertical"
 			android:layout_gravity = "center"
@@ -364,5 +319,20 @@
 	    		</FrameLayout>
     		</LinearLayout>
     	</LinearLayout>
+    </LinearLayout>
+    	
+ 	<ImageView
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentLeft="true"
+    	android:layout_centerVertical="true"
+    	android:src="@drawable/img_left_arrow" />
+ 	
+ 	<ImageView
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentRight="true"
+    	android:layout_centerVertical="true"
+    	android:src="@drawable/img_right_arrow" />
 
-</LinearLayout>
+</RelativeLayout>
