@@ -7,14 +7,19 @@ import org.aurora.speedometer.data.Record;
 import org.aurora.speedometer.location.LocationManager;
 import org.aurora.speedometer.ui.RingView;
 import org.aurora.speedometer.utils.Log;
+import org.aurora.speedometer.utils.Util;
 
 import android.gesture.GestureOverlayView.OnGestureListener;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -489,4 +494,37 @@ public class SpeedometerActivity extends Activity implements
     public boolean onSingleTapUp(MotionEvent e) {  
         return false;  
     }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        //在当前的activity中注册广播
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Util.EXIT_ACTION);
+        this.registerReceiver(this.broadcastReceiver, filter);
+    }
+
+    @Override 
+    public boolean onKeyDown(int keyCode, KeyEvent event) { 
+	if ((keyCode == KeyEvent.KEYCODE_BACK)) { 
+	    Log.d(TAG, "按下了back键 onKeyDown()");
+	    Intent intent = new Intent();
+	    intent.setAction(Util.EXIT_ACTION); // 退出动作
+	    this.sendBroadcast(intent);// 发送广播
+	    super.finish();
+	    return true;
+	}else { 
+	    return super.onKeyDown(keyCode, event);
+	}
+    }
+    
+    //广播的内部类，当收到关闭事件时，调用finish方法结束activity
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+	@Override
+        public void onReceive(Context context, Intent intent) {
+	    Log.d(TAG, "onReceive - " + intent.getAction());
+	    unregisterReceiver(this);
+            finish();
+        }
+    };
 }
