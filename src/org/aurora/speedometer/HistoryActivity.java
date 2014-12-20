@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.GestureDetector;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
@@ -60,6 +61,14 @@ public class HistoryActivity extends Activity implements
 	mDbAdapter.open();
 	
 	mHistoryListView = (ListView)findViewById(R.id.history_list);
+	
+	mHistoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	    @Override
+	    public void onItemClick(AdapterView<?> arg0,View arg1, int arg2, long arg3) {
+		Intent intent = new Intent(HistoryActivity.this, HistoryDetailActivity.class);
+		startActivity(intent);
+	    }
+	});
 	
 	// Show record summary list
 	showHistoryList();

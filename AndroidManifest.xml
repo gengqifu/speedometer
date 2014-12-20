@@ -47,6 +47,7 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -59,6 +60,10 @@
             android:name="org.aurora.speedometer.HistoryActivity"
             android:label="@string/title_activity_history"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="org.aurora.speedometer.HistoryDetailActivity"
+            android:label="@string/title_activity_history_detail" >
         </activity>
     </application>
 

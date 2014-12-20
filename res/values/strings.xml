@@ -26,5 +26,6 @@
     <string name="cycling_run">Run</string>
     <string name="cycling_km">&#160;km</string>
     <string name="running_time">Cost time</string>
+    <string name="title_activity_history_detail">HistoryDetailActivity</string>
 
 </resources>
