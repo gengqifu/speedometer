@@ -27,5 +27,9 @@
     <string name="cycling_km">&#160;km</string>
     <string name="running_time">Cost time</string>
     <string name="title_activity_history_detail">HistoryDetailActivity</string>
+    <string name="this_cycling_data">This cycling data</string>
+    <string name="button_discard">Discard</string>
+    <string name="button_share">Share</string>
+    <string name="button_save">Save</string>
 
 </resources>

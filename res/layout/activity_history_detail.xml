@@ -6,11 +6,259 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#000000"
     tools:context=".HistoryDetailActivity" >
 
-    <TextView
+    <!-- <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="@string/hello_world" /> -->
+    
+    <ImageView
+        android:id="@+id/record_map"
+        android:layout_width="match_parent"
+    	android:layout_height="200dp"
+    	android:background="#008000"/>
+    
+    <TextView 
+        android:id="@+id/this_cycling_data"
+        android:layout_below="@id/record_map"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:textColor="#7d7d7d"
+       	android:textSize="15sp"
+		android:text="@string/this_cycling_data"/>
+    
+    <View
+        android:id="@+id/history_detail_first_line"
+        android:layout_below="@id/this_cycling_data"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#696969" />
+    
+    <LinearLayout
+        android:id="@+id/total_distance"
+        android:layout_below="@id/history_detail_first_line"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+       		android:textColor="#7d7d7d"
+       		android:textSize="15sp"
+       		android:layout_gravity = "center"
+    		android:gravity = "center"
+			android:text="@string/total_distance"/>
+        
+        <LinearLayout 
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_gravity = "center"
+    		android:gravity = "center">
+            <TextView 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+	       		android:textColor="#ffffff"
+	       		android:textSize="20sp"
+	       		android:layout_gravity = "center"
+	    		android:gravity = "center"
+				android:text="0"/>
+            <TextView 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+	       		android:textColor="#7d7d7d"
+	       		android:textSize="18sp"
+	       		android:layout_gravity = "center"
+	    		android:gravity = "center"
+				android:text="@string/cycling_km"/>
+        </LinearLayout>        
+    </LinearLayout>
+    
+    <View
+        android:id="@+id/history_detail_second_line"
+        android:layout_below="@id/total_distance"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#696969" />
+    
+    <LinearLayout
+        android:id="@+id/detail_speed"
+        android:layout_below="@id/history_detail_second_line"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+        	android:layout_height="wrap_content"
+        	android:orientation="vertical">
+            <TextView 
+                android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+       			android:textColor="#7d7d7d"
+       			android:textSize="15sp"
+       			android:layout_gravity = "center"
+    			android:gravity = "center"
+				android:text="@string/average_speed" />
+            <LinearLayout
+    				    android:orientation="horizontal"
+    				    android:layout_width="wrap_content"
+        				android:layout_height="wrap_content"
+        				android:layout_gravity = "center"
+    					android:gravity = "center">
+    				    <TextView
+	    				    android:id="@+id/average_speed"
+	        				android:layout_width="wrap_content"
+	        				android:layout_height="wrap_content"
+	        				android:textColor="#ffffff"
+	        				android:textSize="17.5sp"
+	        				android:text="0" />
+    				    <TextView
+		        			android:layout_width="wrap_content"
+		        			android:layout_height="wrap_content"
+		        			android:textColor="#adadad"
+		        			android:textSize="12.5sp"
+		        			android:layout_alignParentBottom="true"
+		        			android:text=" km/h" />
+    				</LinearLayout>
+        </LinearLayout>        
+		<LinearLayout
+			android:orientation="vertical"
+    		android:layout_gravity = "center"
+    		android:gravity = "center"
+            android:layout_weight="1"
+			android:layout_width="0dp"
+    		android:layout_height="match_parent">
+    		<TextView
+				android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textColor="#adadad"
+        		android:textSize="10sp"
+        		android:text="@string/max_speed" />
+    			<LinearLayout
+    			    android:orientation="horizontal"
+    				android:layout_width="wrap_content"
+        			android:layout_height="wrap_content">
+    				<TextView
+						android:id="@+id/max_speed"
+	        			android:layout_width="wrap_content"
+	        			android:layout_height="wrap_content"
+	        			android:textColor="#ffffff"
+	        			android:textSize="17.5sp"
+	        			android:text="0" />
+					<TextView
+						android:layout_width="wrap_content"
+		        		android:layout_height="wrap_content"
+		        		android:textColor="#adadad"
+		        		android:textSize="12.5sp"
+		        		android:layout_alignParentBottom="true"
+		        		android:text=" km/h" />
+				</LinearLayout>
+		</LinearLayout>
+    </LinearLayout>
+    
+    <View
+        android:id="@+id/history_detail_third_line"
+        android:layout_below="@id/detail_speed"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#696969" />
+    
+    <LinearLayout 
+        android:id="@+id/detail_time"
+        android:layout_below="@id/history_detail_third_line"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout 
+			android:orientation="vertical"
+    		android:layout_gravity = "center"
+    		android:gravity = "center"
+            android:layout_weight="1"
+			android:layout_width="0dp"
+    		android:layout_height="match_parent">
+    		<TextView
+				android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textColor="#adadad"
+        		android:textSize="10sp"
+        		android:text="@string/running_time" />
+			<TextView
+				android:id="@+id/running_time"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textColor="#ffffff"
+        		android:textSize="17.5sp"
+        		android:text="00:00:00" />
+		</LinearLayout>
+		<LinearLayout 
+			android:orientation="vertical"
+    		android:layout_gravity = "center"
+    		android:gravity = "center"
+            android:layout_weight="1"
+			android:layout_width="0dp"
+    		android:layout_height="match_parent">
+    		<TextView
+				android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textColor="#adadad"
+        		android:textSize="10sp"
+        		android:text="@string/rest_time" />
+			<TextView
+				android:id="@+id/rest_time"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textColor="#ffffff"
+        		android:textSize="17.5sp"
+        		android:text="00:00:00" />
+		</LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/button_discard"
+	    	android:orientation="vertical"
+	    	android:layout_gravity = "center"
+	    	android:gravity = "center"
+	    	android:layout_width="0dp"
+	    	android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:text="@string/button_discard"
+	        android:onClick="" />
+        <Button
+            android:id="@+id/button_share"
+	    	android:orientation="vertical"
+	    	android:layout_gravity = "center"
+	    	android:gravity = "center"
+	    	android:layout_width="0dp"
+	    	android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:text="@string/button_share"
+	        android:onClick="" />
+        <Button
+            android:id="@+id/button_save"
+	    	android:orientation="vertical"
+	    	android:layout_gravity = "center"
+	    	android:gravity = "center"
+	    	android:layout_width="0dp"
+	    	android:layout_weight="1"
+	        android:layout_height="wrap_content"
+	        android:text="@string/button_save"
+	        android:visibility="gone"
+	        android:onClick="" />
+    </LinearLayout>
 
 </RelativeLayout>
