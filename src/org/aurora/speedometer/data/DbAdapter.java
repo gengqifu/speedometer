@@ -1,5 +1,8 @@
 package org.aurora.speedometer.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -46,6 +49,16 @@ public class DbAdapter
     
     private static final String SQL_DELETE_RECORD_TABLE = 
 	    "DROP TABLE IF EXIST " + RECORD_TABLE;
+    
+    // A list to store records summary info query from db
+    String[] mRecordList ={
+	    COLUMN_NAME_DISTANCE,
+	    COLUMN_NAME_RUNNINGTIME,
+	    COLUMN_NAME_ENDTIME
+    };
+    
+    String mSortOrder = COLUMN_NAME_ID + " DESC";
+    String mLimitOptions = "5";
     
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -96,7 +109,23 @@ public class DbAdapter
 	return newRowId;
     }
     
-    
+    public List<Record> getRecordSummary() {
+	List<Record> records = new ArrayList<Record>();
+	
+	Cursor cursor = mDb.query(true, RECORD_TABLE, mRecordList, null, null, null, null, mSortOrder, mLimitOptions);
+	if( cursor.moveToFirst() ) {
+	    do {
+		Record record = new Record();
+		record.setEndTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_ENDTIME))));
+		record.setDistance(cursor.getFloat(cursor.getColumnIndex(COLUMN_NAME_DISTANCE)));
+		record.setRunningTime(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_RUNNINGTIME)));
+		records.add(record);
+		Log.d(TAG, record.getDistance() + ", " + record.getRunningTime()  + ", " + record.getEndTime());
+	    } while( cursor.moveToNext() );
+	}
+	
+	return records;
+    }
     
     public class DatabaseHelper extends SQLiteOpenHelper {
 	

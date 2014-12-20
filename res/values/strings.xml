@@ -23,5 +23,8 @@
     <string name="total_distance">Total diatance</string>
     <string name="total_time">Total Time</string>
     <string name="recent_cycling">Recently cycling record</string>
+    <string name="cycling_run">Run</string>
+    <string name="cycling_km">&#160;km</string>
+    <string name="running_time">Cost time</string>
 
 </resources>

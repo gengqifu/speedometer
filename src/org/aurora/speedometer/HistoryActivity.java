@@ -1,5 +1,15 @@
 package org.aurora.speedometer;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.aurora.speedometer.data.DbAdapter;
+import org.aurora.speedometer.data.Record;
 import org.aurora.speedometer.utils.Log;
 import org.aurora.speedometer.utils.Util;
 
@@ -15,7 +25,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.GestureDetector;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 public class HistoryActivity extends Activity implements 
@@ -27,6 +39,11 @@ public class HistoryActivity extends Activity implements
     private GestureDetector mGestureDetector;
     
     private RelativeLayout mHistoryView;
+    private ListView mHistoryListView;
+    
+    private DbAdapter mDbAdapter;
+    
+    private List<Map<String, String>> mHistoryListData = new ArrayList<Map<String,String>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +55,14 @@ public class HistoryActivity extends Activity implements
 	mHistoryView = (RelativeLayout)findViewById(R.id.history_layout);
 	mHistoryView.setOnTouchListener(this);
 	mHistoryView.setLongClickable(true);
+	
+	mDbAdapter = new DbAdapter(this);
+	mDbAdapter.open();
+	
+	mHistoryListView = (ListView)findViewById(R.id.history_list);
+	
+	// Show record summary list
+	showHistoryList();
     }
 
     @Override
@@ -119,4 +144,30 @@ public class HistoryActivity extends Activity implements
             finish();
         }
     };
+    
+    private void showHistoryList() {
+	List<Record> records = new ArrayList<Record>();
+	records = mDbAdapter.getRecordSummary();
+	for(int i=0; i<records.size(); i++) {
+	    Record record = records.get(i);
+	    Log.d(TAG, records.get(i).getRunningTime() + ", " + records.get(i).getDistance() + ", " + records.get(i).getEndTime());
+	    Float distance = record.getDistance();
+	    DecimalFormat df = new DecimalFormat("##0.00");
+	    String runningTime = record.getRunningTime();
+	    Long endTime = record.getEndTime();
+	    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+	    String date = sdf.format(new Date(endTime));
+	    String summary = getString(R.string.cycling_run) + df.format(distance) + getString(R.string.cycling_km) +
+		    ", " + runningTime;
+	    Map<String, String> listItem = new HashMap<String, String>();
+	    listItem.put("summary", summary);
+	    listItem.put("date", date);
+	    mHistoryListData.add(listItem);
+	}
+	
+	mHistoryListView.setAdapter(new SimpleAdapter(this,mHistoryListData,R.layout.history_list_item,
+		new String[]{"summary", "date"},
+		new int[]{R.id.text1,R.id.text2}
+	));
+    }
 }
