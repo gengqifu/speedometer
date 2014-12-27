@@ -269,7 +269,7 @@
 	    			    android:orientation="vertical"
 	    			    android:layout_gravity = "center"
 	    			    android:gravity = "center"
-	    			    android:layout_width="wrap_content"
+	    			    android:layout_width="match_parent"
 	        			android:layout_height="wrap_content"
 	        			android:text="@string/button_start"
 	        			android:onClick="startRecord" />
@@ -293,7 +293,7 @@
 	    			    		android:orientation="vertical"
 	    			    		android:layout_gravity = "center"
 	    			    		android:gravity = "center"
-	    			    		android:layout_width="wrap_content"
+	    			    		android:layout_width="match_parent"
 	        					android:layout_height="wrap_content"
 	        					android:text="@string/button_pause"
 	        					android:onClick="pauseRecord" />
@@ -310,7 +310,7 @@
 	    			    		android:orientation="vertical"
 	    			    		android:layout_gravity = "center"
 	    			    		android:gravity = "center"
-	    			    		android:layout_width="wrap_content"
+	    			    		android:layout_width="match_parent"
 	        					android:layout_height="wrap_content"
 	        					android:text="@string/button_stop"
 	        					android:onClick="stopRecord" />

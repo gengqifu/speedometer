@@ -19,4 +19,13 @@
         android:textSize="15sp"
         android:layout_marginBottom="8dp" />
     
+    <TextView android:id="@+id/text3"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#7d7d7d"
+        android:textSize="15sp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+    
 </LinearLayout>

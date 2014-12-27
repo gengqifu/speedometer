@@ -172,6 +172,10 @@ public class DbAdapter
 	return record;
     }
     
+    public void delRecord(long endtime) {
+	mDb.execSQL("DELETE FROM record WHERE endtime=" + endtime);
+    }
+    
     public Total getTotal() {
 	Total total = new Total();
 	

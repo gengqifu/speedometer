@@ -74,7 +74,13 @@ public class HistoryActivity extends Activity implements
 	mHistoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 	    @Override
 	    public void onItemClick(AdapterView<?> arg0,View arg1, int arg2, long arg3) {
+		TextView endtimeView = (TextView)findViewById(R.id.text3);
+		Log.d(TAG, "endtimeView - " + endtimeView.getText().toString());
 		Intent intent = new Intent(HistoryActivity.this, HistoryDetailActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putBoolean("showSaveButton", false);
+		bundle.putString("endtime", endtimeView.getText().toString());
+		intent.putExtras(bundle);
 		startActivity(intent);
 	    }
 	});
@@ -182,12 +188,13 @@ public class HistoryActivity extends Activity implements
 	    Map<String, String> listItem = new HashMap<String, String>();
 	    listItem.put("summary", summary);
 	    listItem.put("date", date);
+	    listItem.put("endtime", endTime.toString());
 	    mHistoryListData.add(listItem);
 	}
 	
 	mHistoryListView.setAdapter(new SimpleAdapter(this,mHistoryListData,R.layout.history_list_item,
-		new String[]{"summary", "date"},
-		new int[]{R.id.text1,R.id.text2}
+		new String[]{"summary", "date", "endtime"},
+		new int[]{R.id.text1,R.id.text2, R.id.text3}
 	));
     }
     

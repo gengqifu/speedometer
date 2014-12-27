@@ -304,7 +304,9 @@ public class SpeedometerActivity extends Activity implements
 
 	Record record = new Record();
 	record.setStartTime(mStartTime);
-	record.setEndTime(System.currentTimeMillis());
+	long endTime = System.currentTimeMillis();
+	//record.setEndTime(System.currentTimeMillis());
+	record.setEndTime(endTime);
 	record.setDistance((float)mDistance);
 	record.setRunningTime(mRunningSeconds);
 	record.setRestTime(mRestSeconds);
@@ -313,7 +315,7 @@ public class SpeedometerActivity extends Activity implements
 	long newRowId = mDbAdapter.insertRecord(record);
 	Log.d(TAG, "insert record newRowId " + newRowId);
 	
-	Total total = mDbAdapter.getTotal();
+	/*Total total = mDbAdapter.getTotal();
 	total.setDistance(total.getDistance() + (float)mDistance);
 	total.setTime(total.getTime() + mRunningSeconds);
 	total.setTimes(total.getTimes()+1);
@@ -321,7 +323,14 @@ public class SpeedometerActivity extends Activity implements
 	    newRowId = mDbAdapter.insertTotal(total);
 	} else {
 	    newRowId = mDbAdapter.updateTotal(total);
-	}
+	}*/
+	
+	Intent intent = new Intent(SpeedometerActivity.this, HistoryDetailActivity.class);
+	Bundle bundle = new Bundle();
+	bundle.putBoolean("showSaveButton", true);
+	bundle.putString("endtime", Long.toString(endTime));
+	intent.putExtras(bundle);
+	startActivity(intent);
 	
 	Log.d(TAG, "insert total, new RowId " + newRowId);
 
