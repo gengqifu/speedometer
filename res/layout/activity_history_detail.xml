@@ -80,7 +80,7 @@
     
     <View
         android:id="@+id/history_detail_second_line"
-        android:layout_below="@id/total_distance"
+        android:layout_below="@id/sum_distance"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="1dip"
