@@ -5,8 +5,8 @@ public class Record {
     
     private long startTime = 0L;
     private long endTime =0L;
-    private String runningTime = "";
-    private String restTime = "";
+    private int runningTime = 0;
+    private int restTime = 0;
     private float distance = 0.0f;
     private float maxSpeed = 0.0f;
     private float averageSpeed = 0.0f;
@@ -23,11 +23,11 @@ public class Record {
 	this.endTime = endTime;
     }
     
-    public void setRunningTime(String runningTime) {
+    public void setRunningTime(int runningTime) {
 	this.runningTime = runningTime;
     }
     
-    public void setRestTime(String restTime) {
+    public void setRestTime(int restTime) {
 	this.restTime = restTime;
     }
     
@@ -51,11 +51,11 @@ public class Record {
 	return this.endTime;
     }
     
-    public String getRunningTime() {
+    public int getRunningTime() {
 	return this.runningTime;
     }
     
-    public String getRestTime() {
+    public int getRestTime() {
 	return this.restTime;
     }
     

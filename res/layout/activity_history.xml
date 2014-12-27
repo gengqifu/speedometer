@@ -22,11 +22,11 @@
         	android:textSize="15sp"
         	android:text="@string/record_total_prefix" />
         <TextView
+            android:id="@+id/total_times"
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:textColor="#7d7d7d"
-        	android:textSize="15sp"
-        	android:text="2" />
+        	android:textSize="15sp" />
         <TextView
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
@@ -67,11 +67,11 @@
                 android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/total_distance"
 	            	android:layout_width="wrap_content"
 	        		android:layout_height="wrap_content"
 	        		android:textColor="#ffffff"
-	        		android:textSize="30sp"
-					android:text="0" />
+	        		android:textSize="30sp" />
                 <TextView
 	            	android:layout_width="wrap_content"
 	        		android:layout_height="wrap_content"
@@ -93,11 +93,11 @@
         		android:lines="1"
 				android:text="@string/total_time" />
 			<TextView
+			    android:id="@+id/total_time"
            		android:layout_width="wrap_content"
        			android:layout_height="wrap_content"
        			android:textColor="#ffffff"
-       			android:textSize="30sp"
-				android:text="00:00:00" />
+       			android:textSize="30sp" />
         </LinearLayout>
     </LinearLayout>
     

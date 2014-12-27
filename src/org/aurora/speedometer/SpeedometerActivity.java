@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 import org.aurora.speedometer.data.DbAdapter;
 import org.aurora.speedometer.data.Record;
+import org.aurora.speedometer.data.Total;
 import org.aurora.speedometer.location.LocationManager;
 import org.aurora.speedometer.ui.RingView;
 import org.aurora.speedometer.utils.Log;
@@ -50,6 +51,11 @@ public class SpeedometerActivity extends Activity implements
     private int mRestSecond = 0;
     private int mRestMinute = 0;
     private int mRestHour = 0;
+    
+    private int mRunningSeconds = 0; // running time in seconds
+    private int mRestSeconds = 0; // rest time in seconds
+    
+    
     private TextView mDurationView;
     private RingView mRingView;
     private TextView mDistanceView;
@@ -104,40 +110,13 @@ public class SpeedometerActivity extends Activity implements
             mDurationView.setText(formatTime(mHour, mMinute, mSecond)); 
             mHandler.postDelayed(this, 1000); 
         }
-        
-        private String formatTime(int hour, int minute, int second) {
-            String result = "";
-            
-            if( hour < 10 ) {
-        	result += "0" + hour + ":";
-            } else {
-        	result += hour + ":";
-            }
-            
-            if( minute < 10 ) {
-        	result += "0" + minute + ":";
-            } else {
-        	result += minute + ":";
-            }
-            
-            if( second < 10 ) {
-        	result += "0" + second;
-            } else {
-        	result += second;
-            }
-            
-            return result;
-        }
-    
     }
-    
-    //myRunnable running = new myRunnable();
-    //myRunnable rest = new myRunnable();
     
     Runnable running = new Runnable() {
         @Override 
         public void run() {
-            mSecond++; 
+            mSecond++;
+            mRunningSeconds++;
             if( mSecond == 60 ) {
         	mMinute++;
         	mSecond = 0;
@@ -147,39 +126,16 @@ public class SpeedometerActivity extends Activity implements
         	mMinute = 0;
             }
             
-            mDurationView.setText(formatTime(mHour, mMinute, mSecond)); 
+            mDurationView.setText(Util.formatTime(mRunningSeconds));
             mHandler.postDelayed(this, 1000); 
-        }
-        
-        private String formatTime(int hour, int minute, int second) {
-            String result = "";
-            
-            if( hour < 10 ) {
-        	result += "0" + hour + ":";
-            } else {
-        	result += hour + ":";
-            }
-            
-            if( minute < 10 ) {
-        	result += "0" + minute + ":";
-            } else {
-        	result += minute + ":";
-            }
-            
-            if( second < 10 ) {
-        	result += "0" + second;
-            } else {
-        	result += second;
-            }
-            
-            return result;
         }
     };
     
     Runnable rest = new Runnable() {
         @Override 
         public void run() {
-            mRestSecond++; 
+            mRestSecond++;
+            mRestSeconds++;
             if( mRestSecond == 60 ) {
         	mRestMinute++;
         	mRestSecond = 0;
@@ -189,32 +145,8 @@ public class SpeedometerActivity extends Activity implements
         	mRestMinute = 0;
             }
             
-            mRestView.setText(formatTime(mRestHour, mRestMinute, mRestSecond)); 
+            mRestView.setText(Util.formatTime(mRestSeconds));
             mHandler.postDelayed(this, 1000); 
-        }
-        
-        private String formatTime(int hour, int minute, int second) {
-            String result = "";
-            
-            if( hour < 10 ) {
-        	result += "0" + hour + ":";
-            } else {
-        	result += hour + ":";
-            }
-            
-            if( minute < 10 ) {
-        	result += "0" + minute + ":";
-            } else {
-        	result += minute + ":";
-            }
-            
-            if( second < 10 ) {
-        	result += "0" + second;
-            } else {
-        	result += second;
-            }
-            
-            return result;
         }
     };
 
@@ -238,7 +170,6 @@ public class SpeedometerActivity extends Activity implements
 	mGpsLoadingView = (ImageView)findViewById(R.id.gps_circle_loading);
 	
 	mStartButton.setClickable(false);
-	//mHandler.postDelayed(runnable, 1000);
 	
 	mLocationManager = new LocationManager(this, this);
 	
@@ -375,12 +306,24 @@ public class SpeedometerActivity extends Activity implements
 	record.setStartTime(mStartTime);
 	record.setEndTime(System.currentTimeMillis());
 	record.setDistance((float)mDistance);
-	record.setRunningTime(formatTime(mHour, mMinute, mSecond));
-	record.setRestTime(formatTime(mRestHour, mRestMinute, mRestSecond));
+	record.setRunningTime(mRunningSeconds);
+	record.setRestTime(mRestSeconds);
 	record.setMaxSpeed(mMaxSpeed);
 	record.setAverageSpeed(mAverageSpeed);
 	long newRowId = mDbAdapter.insertRecord(record);
-	Log.d(TAG, "newRowId " + newRowId);
+	Log.d(TAG, "insert record newRowId " + newRowId);
+	
+	Total total = mDbAdapter.getTotal();
+	total.setDistance(total.getDistance() + (float)mDistance);
+	total.setTime(total.getTime() + mRunningSeconds);
+	total.setTimes(total.getTimes()+1);
+	if(total.getTimes() == 1 ) {
+	    newRowId = mDbAdapter.insertTotal(total);
+	} else {
+	    newRowId = mDbAdapter.updateTotal(total);
+	}
+	
+	Log.d(TAG, "insert total, new RowId " + newRowId);
 
 	initialize();
 	resetUI();

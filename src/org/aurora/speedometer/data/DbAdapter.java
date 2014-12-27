@@ -28,7 +28,12 @@ public class DbAdapter
     public static final String COLUMN_NAME_MAXSPEED = "maxspeed";
     public static final String COLUMN_NAME_AVERAGESPEED = "averagespeed";
     
+    public static final String COLUMN_NAME_TOTAL_DISTANCE = "distance";
+    public static final String COLUMN_NAME_TOTAL_TIME = "time";
+    public static final String COLUMN_NAME_TOTAL_TIMES = "times";
+    
     public static final String RECORD_TABLE = "record";
+    public static final String TOTAL_TABLE = "total";
     
     private static final String TEXT_TYPE = " TEXT";
     private static final String FLOAT_TYPE = " FLOAT";
@@ -38,23 +43,45 @@ public class DbAdapter
     private static final String SQL_CREATE_RECORD_TABLE = 
 	    "CREATE TABLE " + RECORD_TABLE + " (" + 
 		    COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-		    COLUMN_NAME_STARTTIME + TEXT_TYPE + COMMA_SEP + 
-		    COLUMN_NAME_ENDTIME + TEXT_TYPE + COMMA_SEP + 
-		    COLUMN_NAME_RUNNINGTIME + TEXT_TYPE + COMMA_SEP +
-		    COLUMN_NAME_RESTTIME + TEXT_TYPE + COMMA_SEP + 
+		    COLUMN_NAME_STARTTIME + INT_TYPE + COMMA_SEP + 
+		    COLUMN_NAME_ENDTIME + INT_TYPE + COMMA_SEP + 
+		    COLUMN_NAME_RUNNINGTIME + INT_TYPE + COMMA_SEP +
+		    COLUMN_NAME_RESTTIME + INT_TYPE + COMMA_SEP + 
 		    COLUMN_NAME_DISTANCE + FLOAT_TYPE + COMMA_SEP + 
 		    COLUMN_NAME_MAXSPEED + FLOAT_TYPE + COMMA_SEP + 
 		    COLUMN_NAME_AVERAGESPEED + FLOAT_TYPE + 
 		    ")";
     
+    private static String SQL_CREATE_TOTAL_TABLE = 
+	    "CREATE TABLE " + TOTAL_TABLE + " (" +
+		    COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+		    COLUMN_NAME_TOTAL_DISTANCE + FLOAT_TYPE + COMMA_SEP +
+		    COLUMN_NAME_TOTAL_TIME + INT_TYPE + COMMA_SEP +
+		    COLUMN_NAME_TOTAL_TIMES + INT_TYPE +
+		    ")";
+	
     private static final String SQL_DELETE_RECORD_TABLE = 
 	    "DROP TABLE IF EXIST " + RECORD_TABLE;
+    
+    private static final String SQL_DELETE_TOTAL_TABLE = 
+	    "DROP TABLE IF EXIST " + TOTAL_TABLE;
     
     // A list to store records summary info query from db
     String[] mRecordList ={
 	    COLUMN_NAME_DISTANCE,
 	    COLUMN_NAME_RUNNINGTIME,
 	    COLUMN_NAME_ENDTIME
+    };
+    
+    String[] mRecordFull = {
+	    COLUMN_NAME_ID,
+	    COLUMN_NAME_STARTTIME,
+	    COLUMN_NAME_ENDTIME,
+	    COLUMN_NAME_RUNNINGTIME,
+	    COLUMN_NAME_RESTTIME,
+	    COLUMN_NAME_DISTANCE,
+	    COLUMN_NAME_MAXSPEED,
+	    COLUMN_NAME_AVERAGESPEED
     };
     
     String mSortOrder = COLUMN_NAME_ID + " DESC";
@@ -118,13 +145,66 @@ public class DbAdapter
 		Record record = new Record();
 		record.setEndTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_ENDTIME))));
 		record.setDistance(cursor.getFloat(cursor.getColumnIndex(COLUMN_NAME_DISTANCE)));
-		record.setRunningTime(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_RUNNINGTIME)));
+		record.setRunningTime(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_RUNNINGTIME)));
 		records.add(record);
 		Log.d(TAG, record.getDistance() + ", " + record.getRunningTime()  + ", " + record.getEndTime());
 	    } while( cursor.moveToNext() );
 	}
 	
 	return records;
+    }
+    
+    public Record getRecord(long endTime) {
+	Record record = new Record();
+	
+	//Cursor cursor = mDb.query(true, RECORD_TABLE, mRecordFull, COLUMN_NAME_ENDTIME, String.valueOf(endTime), null, null, mSortOrder, mLimitOptions);
+	Cursor cursor = mDb.rawQuery("SELECT * FROM record WHERE endtime=?", new String[]{Long.toString(endTime)});
+	if( cursor.moveToFirst() ) {
+    		record.setAverageSpeed(cursor.getFloat(cursor.getColumnIndex(COLUMN_NAME_AVERAGESPEED)));
+    		record.setDistance(cursor.getFloat(cursor.getColumnIndex(COLUMN_NAME_DISTANCE)));
+    		record.setEndTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_ENDTIME))));
+    		record.setMaxSpeed(cursor.getFloat(cursor.getColumnIndex(COLUMN_NAME_MAXSPEED)));
+    		record.setRestTime(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_RESTTIME)));
+    		record.setRunningTime(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_RUNNINGTIME)));
+    		record.setStartTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(COLUMN_NAME_STARTTIME))));
+	}
+	
+	return record;
+    }
+    
+    public Total getTotal() {
+	Total total = new Total();
+	
+	Cursor cursor = mDb.rawQuery("SELECT * FROM total", null);
+	if( cursor.moveToFirst() ) {
+	    total.setDistance(cursor.getFloat(cursor.getColumnIndex(COLUMN_NAME_TOTAL_DISTANCE)));
+	    total.setTime(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_TOTAL_TIME)));
+	    total.setTimes(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_TOTAL_TIMES)));
+	}
+	
+	return total;
+    }
+    
+    public long insertTotal(Total total) {
+	ContentValues values = new ContentValues();
+	
+	values.put(COLUMN_NAME_TOTAL_DISTANCE, total.getDistance());
+	values.put(COLUMN_NAME_TOTAL_TIME, total.getTime());
+	values.put(COLUMN_NAME_TOTAL_TIMES, total.getTimes());
+	long newRowId;
+	newRowId = mDb.insert(TOTAL_TABLE, null, values);
+	return newRowId;
+    }
+    
+    public long updateTotal(Total total) {
+	ContentValues values = new ContentValues();
+	
+	values.put(COLUMN_NAME_TOTAL_DISTANCE, total.getDistance());
+	values.put(COLUMN_NAME_TOTAL_TIME, total.getTime());
+	values.put(COLUMN_NAME_TOTAL_TIMES, total.getTimes());
+	long newRowId;
+	newRowId = mDb.update(TOTAL_TABLE, values, null, null);
+	return newRowId;
     }
     
     public class DatabaseHelper extends SQLiteOpenHelper {
@@ -137,11 +217,13 @@ public class DbAdapter
 	public void onCreate(SQLiteDatabase db) {
 	    Log.d(TAG, SQL_CREATE_RECORD_TABLE);
 	    db.execSQL(SQL_CREATE_RECORD_TABLE);
+	    db.execSQL(SQL_CREATE_TOTAL_TABLE);
 	}
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	    db.execSQL(SQL_DELETE_RECORD_TABLE);
+	    db.execSQL(SQL_DELETE_TOTAL_TABLE);
 	    onCreate(db);
 	}
 	

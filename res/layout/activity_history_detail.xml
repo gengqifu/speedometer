@@ -38,7 +38,7 @@
         android:background="#696969" />
     
     <LinearLayout
-        android:id="@+id/total_distance"
+        android:id="@+id/sum_distance"
         android:layout_below="@id/history_detail_first_line"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"

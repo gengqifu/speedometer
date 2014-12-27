@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.aurora.speedometer.data.DbAdapter;
 import org.aurora.speedometer.data.Record;
+import org.aurora.speedometer.data.Total;
 import org.aurora.speedometer.utils.Log;
 import org.aurora.speedometer.utils.Util;
 
@@ -29,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class HistoryActivity extends Activity implements 
@@ -41,6 +43,9 @@ public class HistoryActivity extends Activity implements
     
     private RelativeLayout mHistoryView;
     private ListView mHistoryListView;
+    private TextView mTotalTimesView;
+    private TextView mTotalTimeView;
+    private TextView mTotalDistanceView;
     
     private DbAdapter mDbAdapter;
     
@@ -57,6 +62,10 @@ public class HistoryActivity extends Activity implements
 	mHistoryView.setOnTouchListener(this);
 	mHistoryView.setLongClickable(true);
 	
+	mTotalTimesView = (TextView)findViewById(R.id.total_times);
+	mTotalTimeView = (TextView)findViewById(R.id.total_time);
+	mTotalDistanceView = (TextView)findViewById(R.id.total_distance);
+	
 	mDbAdapter = new DbAdapter(this);
 	mDbAdapter.open();
 	
@@ -71,6 +80,7 @@ public class HistoryActivity extends Activity implements
 	});
 	
 	// Show record summary list
+	showHistorySummary();
 	showHistoryList();
     }
 
@@ -162,12 +172,13 @@ public class HistoryActivity extends Activity implements
 	    Log.d(TAG, records.get(i).getRunningTime() + ", " + records.get(i).getDistance() + ", " + records.get(i).getEndTime());
 	    Float distance = record.getDistance();
 	    DecimalFormat df = new DecimalFormat("##0.00");
-	    String runningTime = record.getRunningTime();
+	    long runningTime = record.getRunningTime();
+	    String runningTimeStr = Util.formatTime((int)runningTime); // May lost accuracy
 	    Long endTime = record.getEndTime();
 	    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 	    String date = sdf.format(new Date(endTime));
 	    String summary = getString(R.string.cycling_run) + df.format(distance) + getString(R.string.cycling_km) +
-		    ", " + runningTime;
+		    ", " + runningTimeStr;
 	    Map<String, String> listItem = new HashMap<String, String>();
 	    listItem.put("summary", summary);
 	    listItem.put("date", date);
@@ -178,5 +189,15 @@ public class HistoryActivity extends Activity implements
 		new String[]{"summary", "date"},
 		new int[]{R.id.text1,R.id.text2}
 	));
+    }
+    
+    private void showHistorySummary() {
+	Total total = new Total();
+	
+	total = mDbAdapter.getTotal();
+	Log.d(TAG, "times " + total.getTimes());
+	mTotalTimesView.setText("" + total.getTimes());
+	mTotalTimeView.setText(Util.formatTime(total.getTime()));
+	mTotalDistanceView.setText(Util.formatDistance(total.getDistance()));
     }
 }
