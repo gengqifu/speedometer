@@ -63,6 +63,19 @@ public class HistoryDetailActivity extends Activity {
         
         showRecordDetail(mEndtime);
     }
+    
+    @Override
+    protected void onStop() {
+	Log.d(TAG, "onStop");
+	super.onStop();
+	finish();
+    }
+    
+    @Override
+    protected void onDestroy() {
+	Log.d(TAG, "onDestroy");
+	super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
