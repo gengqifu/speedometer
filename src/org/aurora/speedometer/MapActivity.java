@@ -72,8 +72,6 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 	SDKInitializer.initialize(getApplicationContext());
 	setContentView(R.layout.activity_map);
 	
-	mMapView = (MapView) findViewById(R.id.bmapView);
-	
 	mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
 	mLocationClient.registerLocationListener( myListener );    //注册监听函数
 	
@@ -119,9 +117,8 @@ OnTouchListener, GestureDetector.OnGestureListener  {
     protected void onResume() {  
         super.onResume();  
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理  
-        mMapView.onResume();  
-
-        super.onResume();
+        mMapView.onResume();
+        
         //在当前的activity中注册广播
         IntentFilter filter = new IntentFilter();
         filter.addAction(Util.EXIT_ACTION);
