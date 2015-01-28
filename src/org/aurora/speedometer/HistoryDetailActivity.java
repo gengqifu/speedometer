@@ -1,10 +1,28 @@
 package org.aurora.speedometer;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.aurora.speedometer.MapActivity.MyLocationListener;
 import org.aurora.speedometer.data.DbAdapter;
 import org.aurora.speedometer.data.Record;
 import org.aurora.speedometer.data.Total;
 import org.aurora.speedometer.utils.Log;
 import org.aurora.speedometer.utils.Util;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.PolylineOptions;
+import com.baidu.mapapi.model.LatLng;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -32,11 +50,37 @@ public class HistoryDetailActivity extends Activity {
     private Record mRecord;
     
     private DbAdapter mDbAdapter;
+    
+    private MapView mMapView = null;
+    private BaiduMap mBaiduMap;
+    private LocationClient mLocationClient = null;
+    private BDLocationListener myListener = new MyLocationListener();
+    boolean isFirstLoc = true;// 是否首次定位
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+	SDKInitializer.initialize(getApplicationContext());
 	setContentView(R.layout.activity_history_detail);
+	
+	mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+	mLocationClient.registerLocationListener( myListener );    //注册监听函数
+	
+	// 地图初始化
+	mMapView = (MapView) findViewById(R.id.record_map);
+	mBaiduMap = mMapView.getMap();
+	// 开启定位图层
+	mBaiduMap.setMyLocationEnabled(true);
+	// 定位初始化
+	mLocationClient = new LocationClient(this);
+	mLocationClient.registerLocationListener(myListener);
+	LocationClientOption option = new LocationClientOption();
+	option.setOpenGps(true);// 打开gps
+	option.setCoorType("bd09ll"); // 设置坐标类型
+	option.setScanSpan(1000);
+	option.setIsNeedAddress(true);
+	mLocationClient.setLocOption(option);
+	mLocationClient.start();
 	
 	mDbAdapter = new DbAdapter(this);
 	mDbAdapter.open();
@@ -75,6 +119,22 @@ public class HistoryDetailActivity extends Activity {
     protected void onDestroy() {
 	Log.d(TAG, "onDestroy");
 	super.onDestroy();
+	//在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理  
+        mMapView.onDestroy();
+    }
+    
+    @Override  
+    protected void onResume() {  
+        super.onResume();  
+        //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理  
+        mMapView.onResume();
+    }
+    
+    @Override  
+    protected void onPause() {  
+        super.onPause();  
+        //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理  
+        mMapView.onPause();  
     }
 
     @Override
@@ -123,5 +183,30 @@ public class HistoryDetailActivity extends Activity {
     
     public void shareRecord(View view) {
 	
+    }
+    
+    /**
+     * 定位SDK监听函数
+     */
+    public class MyLocationListener implements BDLocationListener {
+	@Override
+	public void onReceiveLocation(BDLocation location) {
+	    // map view 销毁后不在处理新接收的位置
+	    if (location == null || mMapView == null)
+		return;
+	    MyLocationData locData = new MyLocationData.Builder()
+	    	.accuracy(location.getRadius())
+	    	// 此处设置开发者获取到的方向信息，顺时针0-360
+	    	.direction(100).latitude(location.getLatitude())
+	    	.longitude(location.getLongitude()).build();
+	    mBaiduMap.setMyLocationData(locData);
+	    if (isFirstLoc) {
+		isFirstLoc = false;
+		LatLng ll = new LatLng(location.getLatitude(),
+			location.getLongitude());
+		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+		mBaiduMap.animateMapStatus(u);
+	    }
+	}
     }
 }
