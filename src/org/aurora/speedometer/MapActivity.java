@@ -1,5 +1,8 @@
 package org.aurora.speedometer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.aurora.speedometer.utils.Log;
 import org.aurora.speedometer.utils.Util;
 
@@ -9,6 +12,8 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 
 import com.baidu.location.BDLocation;
@@ -55,6 +60,9 @@ OnTouchListener, GestureDetector.OnGestureListener  {
     private BaiduMap mBaiduMap;
     private LocationClient mLocationClient = null;
     private BDLocationListener myListener = new MyLocationListener();
+    
+    private BDLocation mPreviousLocation = null;
+    private BDLocation mCurrentLocation = null;
     
     boolean isFirstLoc = true;// 是否首次定位
 
@@ -149,6 +157,25 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 			location.getLongitude());
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 		mBaiduMap.animateMapStatus(u);
+	    }
+	    
+	    mCurrentLocation = location;
+	    if( mPreviousLocation == null ) {
+		Log.d(TAG, "First location!");
+		mPreviousLocation = mCurrentLocation;
+	    } else {
+		Log.d(TAG, "Location changed! - lat: " + location.getLatitude() + "lng: " + location.getLongitude());
+		LatLng p1 = new LatLng(mPreviousLocation.getLatitude(),
+			mPreviousLocation.getLongitude());
+		LatLng p2 = new LatLng(mCurrentLocation.getLatitude(),
+			mCurrentLocation.getLongitude());
+		List<LatLng> points = new ArrayList<LatLng>();
+		points.add(p1);
+		points.add(p2);
+		OverlayOptions ooPolyline = new PolylineOptions().width(10)
+			.color(0xAAFF0000).points(points);
+		mBaiduMap.addOverlay(ooPolyline);
+		mPreviousLocation = mCurrentLocation;
 	    }
 	}
 
