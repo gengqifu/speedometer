@@ -9,8 +9,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
 
 import org.aurora.speedometer.utils.Log;
+
+import com.baidu.location.BDLocation;
 
 public class DbAdapter
 {
@@ -32,12 +35,18 @@ public class DbAdapter
     public static final String COLUMN_NAME_TOTAL_TIME = "time";
     public static final String COLUMN_NAME_TOTAL_TIMES = "times";
     
+    public static final String COLUMN_NAME_ROUTE_LNG = "lng"; // longitude
+    public static final String COLUMN_NAME_ROUTE_LAT = "lat"; // latitude
+    public static final String COLUMN_NAME_ROUTE_STARTTIME = "starttime"; // activity starting time
+    
     public static final String RECORD_TABLE = "record";
     public static final String TOTAL_TABLE = "total";
+    public static final String ROUTE_TABLE = "route";
     
     private static final String TEXT_TYPE = " TEXT";
     private static final String FLOAT_TYPE = " FLOAT";
     private static final String INT_TYPE = " INTEGER";
+    private static final String DOUBLE_TYPE = "DOUBLE";
     private static final String COMMA_SEP = ",";
     
     private static final String SQL_CREATE_RECORD_TABLE = 
@@ -59,12 +68,23 @@ public class DbAdapter
 		    COLUMN_NAME_TOTAL_TIME + INT_TYPE + COMMA_SEP +
 		    COLUMN_NAME_TOTAL_TIMES + INT_TYPE +
 		    ")";
+    
+    private static String SQL_CREATE_ROUTE_TABLE = 
+	    "CREATE TABLE " + ROUTE_TABLE + " (" +
+		    COLUMN_NAME_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+		    COLUMN_NAME_ROUTE_LNG + DOUBLE_TYPE + COMMA_SEP +
+		    COLUMN_NAME_ROUTE_LAT + DOUBLE_TYPE + COMMA_SEP +
+		    COLUMN_NAME_ROUTE_STARTTIME + INT_TYPE +
+		    ")";
 	
     private static final String SQL_DELETE_RECORD_TABLE = 
 	    "DROP TABLE IF EXIST " + RECORD_TABLE;
     
     private static final String SQL_DELETE_TOTAL_TABLE = 
 	    "DROP TABLE IF EXIST " + TOTAL_TABLE;
+    
+    private static final String SQL_DELETE_ROUTE_TABLE = 
+	    "DROP TABLE IF EXIST " + ROUTE_TABLE;
     
     // A list to store records summary info query from db
     String[] mRecordList ={
@@ -209,6 +229,37 @@ public class DbAdapter
 	long newRowId;
 	newRowId = mDb.update(TOTAL_TABLE, values, null, null);
 	return newRowId;
+    }
+    
+    public long insertRoute(BDLocation location, long starttime) {
+	ContentValues values = new ContentValues();
+	
+	values.put(COLUMN_NAME_ROUTE_STARTTIME, starttime);
+	values.put(COLUMN_NAME_ROUTE_LNG, location.getLongitude());
+	values.put(COLUMN_NAME_ROUTE_LAT, location.getLatitude());
+	long newRowId;
+	newRowId = mDb.insert(TOTAL_TABLE, null, values);
+	return newRowId;
+    }
+    
+    public List<BDLocation> getRoute(long starttime) {
+	List<BDLocation> route = new ArrayList<BDLocation>();
+	
+	Cursor cursor = mDb.rawQuery("SELECT * FROM " + ROUTE_TABLE +
+		" WHERE " + COLUMN_NAME_ROUTE_STARTTIME +
+		"=" + starttime, null);
+	
+	if( cursor.moveToFirst() ) {
+	    do {
+		BDLocation location = new BDLocation();
+		location.setLongitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_NAME_ROUTE_LNG)));
+		location.setLatitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_NAME_ROUTE_LAT)));
+		route.add(location);
+		Log.d(TAG, "lng: " + location.getLongitude() + ", lat: " + location.getLatitude());
+	    } while( cursor.moveToNext() );
+	}
+	
+	return route;
     }
     
     public class DatabaseHelper extends SQLiteOpenHelper {
