@@ -44,7 +44,8 @@
         <activity
             android:name="org.aurora.speedometer.SpeedometerActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,17 +55,20 @@
         <activity
             android:name="org.aurora.speedometer.MapActivity"
             android:label="@string/title_activity_map"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:launchMode="singleInstance" >
         </activity>
         <activity
             android:name="org.aurora.speedometer.HistoryActivity"
             android:label="@string/title_activity_history"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:launchMode="singleInstance" >
         </activity>
         <activity
             android:name="org.aurora.speedometer.HistoryDetailActivity"
             android:label="@string/title_activity_history_detail"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:launchMode="singleInstance" >
         </activity>
     </application>
 
