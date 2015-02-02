@@ -63,7 +63,8 @@
         </activity>
         <activity
             android:name="org.aurora.speedometer.HistoryDetailActivity"
-            android:label="@string/title_activity_history_detail" >
+            android:label="@string/title_activity_history_detail"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
