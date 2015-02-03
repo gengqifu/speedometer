@@ -152,6 +152,7 @@ public class SpeedometerActivity extends Activity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+	Log.d(TAG, "onCreate");
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_speedometer);
 	
@@ -193,6 +194,17 @@ public class SpeedometerActivity extends Activity implements
 
 	mDbAdapter = new DbAdapter(this);
 	mDbAdapter.open();
+    }
+    
+
+    @Override
+    public void onResume() {
+	Log.d(TAG, "onResume");
+        super.onResume();
+        //在当前的activity中注册广播
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Util.EXIT_ACTION);
+        this.registerReceiver(this.broadcastReceiver, filter);
     }
 
     @Override
@@ -297,7 +309,7 @@ public class SpeedometerActivity extends Activity implements
 	}
     }
     
-    public void stopRecord(View viw) {
+    public void stopRecord(View view) {
 	mIfStartRecord = false;
 	mHandler.removeCallbacks(running);
 	mHandler.removeCallbacks(rest);
@@ -325,6 +337,11 @@ public class SpeedometerActivity extends Activity implements
 	    newRowId = mDbAdapter.updateTotal(total);
 	}*/
 	
+	mHandler.removeCallbacks(running);
+	mHandler.removeCallbacks(rest);
+	initialize();
+	resetUI();
+	
 	Intent intent = new Intent(SpeedometerActivity.this, HistoryDetailActivity.class);
 	Bundle bundle = new Bundle();
 	bundle.putBoolean("showSaveButton", true);
@@ -333,9 +350,6 @@ public class SpeedometerActivity extends Activity implements
 	startActivity(intent);
 	
 	Log.d(TAG, "insert total, new RowId " + newRowId);
-
-	initialize();
-	resetUI();
     }
     
     public void initialize() {
@@ -345,6 +359,10 @@ public class SpeedometerActivity extends Activity implements
 	mRestSecond = 0;
 	mRestMinute = 0;
 	mRestHour = 0;
+	
+	mRunningSeconds = 0;
+	mRestSeconds = 0;
+	
 	mSpeed = 0.0f;
 	mDistance = 0.0d;
 	mCurrentSpeed = 0.0f;
@@ -364,6 +382,7 @@ public class SpeedometerActivity extends Activity implements
 	mDurationView.setText(formatTime(mHour, mMinute, mSecond)); 
 	mRestView.setText(formatTime(mRestHour, mRestMinute, mRestSecond));
 	mDistanceView.setText(formatDistance(mDistance));
+	mPauseButton.setText(R.string.button_pause);
     }
     
     // implement this method from interface GpsStatus.Listener
@@ -445,15 +464,6 @@ public class SpeedometerActivity extends Activity implements
     @Override  
     public boolean onSingleTapUp(MotionEvent e) {  
         return false;  
-    }
-    
-    @Override
-    public void onResume() {
-        super.onResume();
-        //在当前的activity中注册广播
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Util.EXIT_ACTION);
-        this.registerReceiver(this.broadcastReceiver, filter);
     }
 
     @Override 
