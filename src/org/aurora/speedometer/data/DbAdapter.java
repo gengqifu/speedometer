@@ -193,6 +193,7 @@ public class DbAdapter
     }
     
     public void delRecord(long endtime) {
+	Log.d(TAG, "endtime - " + endtime);
 	mDb.execSQL("DELETE FROM record WHERE endtime=" + endtime);
     }
     
@@ -204,6 +205,10 @@ public class DbAdapter
 	    total.setDistance(cursor.getFloat(cursor.getColumnIndex(COLUMN_NAME_TOTAL_DISTANCE)));
 	    total.setTime(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_TOTAL_TIME)));
 	    total.setTimes(cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_TOTAL_TIMES)));
+	} else {
+	    total.setDistance(0);
+	    total.setTime(0);
+	    total.setTimes(0);
 	}
 	
 	return total;

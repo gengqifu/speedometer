@@ -72,8 +72,8 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 	SDKInitializer.initialize(getApplicationContext());
 	setContentView(R.layout.activity_map);
 	
-	mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
-	mLocationClient.registerLocationListener( myListener );    //注册监听函数
+//	mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+//	mLocationClient.registerLocationListener( myListener );    //注册监听函数
 	
 	// 地图初始化
 	mMapView = (MapView) findViewById(R.id.bmapView);

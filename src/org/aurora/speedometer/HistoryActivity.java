@@ -84,10 +84,19 @@ public class HistoryActivity extends Activity implements
 		startActivity(intent);
 	    }
 	});
-	
-	// Show record summary list
-	showHistorySummary();
-	showHistoryList();
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        //在当前的activity中注册广播
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Util.EXIT_ACTION);
+        this.registerReceiver(this.broadcastReceiver, filter);
+        
+     // Show record summary list
+     	showHistorySummary();
+     	showHistoryList();
     }
 
     @Override
@@ -137,15 +146,6 @@ public class HistoryActivity extends Activity implements
         return false;  
     }
     
-    @Override
-    public void onResume() {
-        super.onResume();
-        //在当前的activity中注册广播
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Util.EXIT_ACTION);
-        this.registerReceiver(this.broadcastReceiver, filter);
-    }
-
     @Override 
     public boolean onKeyDown(int keyCode, KeyEvent event) { 
 	if ((keyCode == KeyEvent.KEYCODE_BACK)) { 
@@ -173,6 +173,7 @@ public class HistoryActivity extends Activity implements
     private void showHistoryList() {
 	List<Record> records = new ArrayList<Record>();
 	records = mDbAdapter.getRecordSummary();
+	List<Map<String, String>> historyListData = new ArrayList<Map<String,String>>();
 	for(int i=0; i<records.size(); i++) {
 	    Record record = records.get(i);
 	    Log.d(TAG, records.get(i).getRunningTime() + ", " + records.get(i).getDistance() + ", " + records.get(i).getEndTime());
@@ -189,10 +190,10 @@ public class HistoryActivity extends Activity implements
 	    listItem.put("summary", summary);
 	    listItem.put("date", date);
 	    listItem.put("endtime", endTime.toString());
-	    mHistoryListData.add(listItem);
+	    historyListData.add(listItem);
 	}
 	
-	mHistoryListView.setAdapter(new SimpleAdapter(this,mHistoryListData,R.layout.history_list_item,
+	mHistoryListView.setAdapter(new SimpleAdapter(this,historyListData,R.layout.history_list_item,
 		new String[]{"summary", "date", "endtime"},
 		new int[]{R.id.text1,R.id.text2, R.id.text3}
 	));

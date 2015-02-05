@@ -60,12 +60,9 @@ public class HistoryDetailActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	SDKInitializer.initialize(getApplicationContext());
+	//SDKInitializer.initialize(getApplicationContext());
 	setContentView(R.layout.activity_history_detail);
-	
-	mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
-	mLocationClient.registerLocationListener( myListener );    //注册监听函数
-	
+	/*
 	// 地图初始化
 	mMapView = (MapView) findViewById(R.id.record_map);
 	mBaiduMap = mMapView.getMap();
@@ -80,7 +77,7 @@ public class HistoryDetailActivity extends Activity {
 	option.setScanSpan(1000);
 	option.setIsNeedAddress(true);
 	mLocationClient.setLocOption(option);
-	mLocationClient.start();
+	mLocationClient.start();*/
 	
 	mDbAdapter = new DbAdapter(this);
 	mDbAdapter.open();
@@ -102,7 +99,7 @@ public class HistoryDetailActivity extends Activity {
         }
         
         mEndtime = Long.valueOf(bundle.getString("endtime"));
-        
+        Log.d(TAG, "mEndtime - " + mEndtime);
         getRecord(mEndtime);
         
         showRecordDetail(mEndtime);
@@ -120,21 +117,21 @@ public class HistoryDetailActivity extends Activity {
 	Log.d(TAG, "onDestroy");
 	super.onDestroy();
 	//在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理  
-        mMapView.onDestroy();
+        //mMapView.onDestroy();
     }
     
     @Override  
     protected void onResume() {  
         super.onResume();  
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理  
-        mMapView.onResume();
+        //mMapView.onResume();
     }
     
     @Override  
     protected void onPause() {  
         super.onPause();  
         //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理  
-        mMapView.onPause();  
+        //mMapView.onPause();  
     }
 
     @Override

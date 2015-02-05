@@ -40,6 +40,10 @@
             android:enabled="true"
             android:process=":remote" >
         </service>
+        
+        <service
+            android:name=".CyclingService">
+        </service>
 
         <activity
             android:name="org.aurora.speedometer.SpeedometerActivity"

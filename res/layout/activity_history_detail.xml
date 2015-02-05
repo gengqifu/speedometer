@@ -14,17 +14,17 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" /> -->
     
-    <!-- <ImageView
+    <ImageView
         android:id="@+id/record_map"
         android:layout_width="match_parent"
     	android:layout_height="200dp"
-    	android:background="#008000"/> -->
+    	android:background="#008000"/>
     
-    <com.baidu.mapapi.map.MapView  
+    <!-- <com.baidu.mapapi.map.MapView  
 	    android:id="@+id/record_map"  
 	    android:layout_width="match_parent"  
 	    android:layout_height="200dp"  
-	    android:clickable="true" />
+	    android:clickable="true" />-->
     
     <TextView 
         android:id="@+id/this_cycling_data"
