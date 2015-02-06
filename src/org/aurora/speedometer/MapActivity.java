@@ -3,6 +3,7 @@ package org.aurora.speedometer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.aurora.speedometer.data.DbAdapter;
 import org.aurora.speedometer.utils.Log;
 import org.aurora.speedometer.utils.Util;
 
@@ -64,7 +65,11 @@ OnTouchListener, GestureDetector.OnGestureListener  {
     private BDLocation mPreviousLocation = null;
     private BDLocation mCurrentLocation = null;
     
+    private DbAdapter mDbAdapter;
+    
     boolean isFirstLoc = true;// 是否首次定位
+    
+    private long mStarttime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,13 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 	mMapLeftView = (LinearLayout)findViewById(R.id.map_left);
 	mMapLeftView.setOnTouchListener(this);
 	mMapLeftView.setLongClickable(true);
+	
+	mDbAdapter = new DbAdapter(this);
+	mDbAdapter.open();
+	
+	Intent intent=getIntent();  
+        Bundle bundle=intent.getExtras();
+        mStarttime = bundle.getLong("starttime", 0L);
     }
 
     /*@Override
@@ -155,6 +167,8 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 		mBaiduMap.animateMapStatus(u);
 	    }
+	    
+	    mDbAdapter.insertRoute(location, mStarttime);
 	    
 	    mCurrentLocation = location;
 	    if( mPreviousLocation == null ) {

@@ -46,7 +46,7 @@ public class DbAdapter
     private static final String TEXT_TYPE = " TEXT";
     private static final String FLOAT_TYPE = " FLOAT";
     private static final String INT_TYPE = " INTEGER";
-    private static final String DOUBLE_TYPE = "DOUBLE";
+    private static final String DOUBLE_TYPE = " DOUBLE";
     private static final String COMMA_SEP = ",";
     
     private static final String SQL_CREATE_RECORD_TABLE = 
@@ -243,7 +243,7 @@ public class DbAdapter
 	values.put(COLUMN_NAME_ROUTE_LNG, location.getLongitude());
 	values.put(COLUMN_NAME_ROUTE_LAT, location.getLatitude());
 	long newRowId;
-	newRowId = mDb.insert(TOTAL_TABLE, null, values);
+	newRowId = mDb.insert(ROUTE_TABLE, null, values);
 	return newRowId;
     }
     
@@ -278,12 +278,14 @@ public class DbAdapter
 	    Log.d(TAG, SQL_CREATE_RECORD_TABLE);
 	    db.execSQL(SQL_CREATE_RECORD_TABLE);
 	    db.execSQL(SQL_CREATE_TOTAL_TABLE);
+	    db.execSQL(SQL_CREATE_ROUTE_TABLE);
 	}
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	    db.execSQL(SQL_DELETE_RECORD_TABLE);
 	    db.execSQL(SQL_DELETE_TOTAL_TABLE);
+	    db.execSQL(SQL_DELETE_ROUTE_TABLE);
 	    onCreate(db);
 	}
 	

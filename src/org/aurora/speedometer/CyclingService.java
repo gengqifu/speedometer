@@ -308,4 +308,8 @@ public class CyclingService extends Service implements
     public double getDistance() {
 	return mDistance;
     }
+    
+    public long getStarttime() {
+	return mStartTime;
+    }
 }

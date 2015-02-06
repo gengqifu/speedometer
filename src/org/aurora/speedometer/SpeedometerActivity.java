@@ -3,12 +3,12 @@ package org.aurora.speedometer;
 import java.text.DecimalFormat;
 
 import org.aurora.speedometer.CyclingService.LocalBinder;
-import org.aurora.speedometer.data.DbAdapter;
+//import org.aurora.speedometer.data.DbAdapter;
 import org.aurora.speedometer.ui.RingView;
 import org.aurora.speedometer.utils.Log;
 import org.aurora.speedometer.utils.Util;
 
-import android.location.Location;
+//import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -61,7 +61,7 @@ public class SpeedometerActivity extends Activity implements
 
     private Animation mGpsLoadingAnim;
 
-    private DbAdapter mDbAdapter;
+    //private DbAdapter mDbAdapter;
 
     private GestureDetector mGestureDetector;
 
@@ -107,8 +107,8 @@ public class SpeedometerActivity extends Activity implements
 	    mGpsLoadingView.startAnimation(mGpsLoadingAnim);
 	}
 
-	mDbAdapter = new DbAdapter(this);
-	mDbAdapter.open();
+//	mDbAdapter = new DbAdapter(this);
+//	mDbAdapter.open();
     }
     
 
@@ -291,6 +291,9 @@ public class SpeedometerActivity extends Activity implements
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 	if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE) {
 	    Intent intent = new Intent(SpeedometerActivity.this,MapActivity.class);
+	    Bundle bundle = new Bundle();
+	    bundle.putLong("starttime", mService.getStarttime());
+	    intent.putExtras(bundle);
 	    startActivity(intent);
 	    overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
 	    Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
