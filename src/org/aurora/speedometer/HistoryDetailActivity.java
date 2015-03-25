@@ -51,10 +51,10 @@ public class HistoryDetailActivity extends Activity {
     
     private DbAdapter mDbAdapter;
     
-    private MapView mMapView = null;
-    private BaiduMap mBaiduMap;
-    private LocationClient mLocationClient = null;
-    private BDLocationListener myListener = new MyLocationListener();
+    //private MapView mMapView = null;
+    //private BaiduMap mBaiduMap;
+    //private LocationClient mLocationClient = null;
+    //private BDLocationListener myListener = new MyLocationListener();
     boolean isFirstLoc = true;// 是否首次定位
 
     @Override
@@ -185,7 +185,7 @@ public class HistoryDetailActivity extends Activity {
     /**
      * 定位SDK监听函数
      */
-    public class MyLocationListener implements BDLocationListener {
+    /*public class MyLocationListener implements BDLocationListener {
 	@Override
 	public void onReceiveLocation(BDLocation location) {
 	    // map view 销毁后不在处理新接收的位置
@@ -205,5 +205,5 @@ public class HistoryDetailActivity extends Activity {
 		mBaiduMap.animateMapStatus(u);
 	    }
 	}
-    }
+    }*/
 }
