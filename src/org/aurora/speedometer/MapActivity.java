@@ -70,6 +70,7 @@ OnTouchListener, GestureDetector.OnGestureListener  {
     boolean isFirstLoc = true;// 是否首次定位
     
     private long mStarttime;
+    private boolean isHistory = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,24 +78,34 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 	SDKInitializer.initialize(getApplicationContext());
 	setContentView(R.layout.activity_map);
 	
+	Intent intent=getIntent();  
+        Bundle bundle=intent.getExtras();
+        mStarttime = bundle.getLong("starttime", 0L);
+        isHistory = bundle.getBoolean("history", false);
+        Log.d(TAG, "isHistory: " + isHistory);
+	
 //	mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
 //	mLocationClient.registerLocationListener( myListener );    //注册监听函数
 	
 	// 地图初始化
 	mMapView = (MapView) findViewById(R.id.bmapView);
 	mBaiduMap = mMapView.getMap();
-	// 开启定位图层
-	mBaiduMap.setMyLocationEnabled(true);
-	// 定位初始化
-	mLocationClient = new LocationClient(this);
-	mLocationClient.registerLocationListener(myListener);
-	LocationClientOption option = new LocationClientOption();
-	option.setOpenGps(true);// 打开gps
-	option.setCoorType("bd09ll"); // 设置坐标类型
-	option.setScanSpan(1000);
-	option.setIsNeedAddress(true);
-	mLocationClient.setLocOption(option);
-	mLocationClient.start();
+	
+	if( !isHistory ) {
+	    // Not history, start location
+	    // 开启定位图层
+	    mBaiduMap.setMyLocationEnabled(true);
+	    // 定位初始化
+	    mLocationClient = new LocationClient(this);
+	    mLocationClient.registerLocationListener(myListener);
+	    LocationClientOption option = new LocationClientOption();
+	    option.setOpenGps(true);// 打开gps
+	    option.setCoorType("bd09ll"); // 设置坐标类型
+	    option.setScanSpan(1000);
+	    option.setIsNeedAddress(true);
+	    mLocationClient.setLocOption(option);
+	    mLocationClient.start();
+	}
 	
 	mGestureDetector = new GestureDetector(this, this);
 	
@@ -105,10 +116,6 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 	
 	mDbAdapter = new DbAdapter(this);
 	mDbAdapter.open();
-	
-	Intent intent=getIntent();  
-        Bundle bundle=intent.getExtras();
-        mStarttime = bundle.getLong("starttime", 0L);
     }
 
     /*@Override
@@ -130,6 +137,10 @@ OnTouchListener, GestureDetector.OnGestureListener  {
         super.onResume();  
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理  
         mMapView.onResume();
+        if( isHistory ) {
+            List<BDLocation> routes = mDbAdapter.getRoute(mStarttime);
+            drawRoutes(routes);
+        }
         
         //在当前的activity中注册广播
         IntentFilter filter = new IntentFilter();
@@ -257,4 +268,17 @@ OnTouchListener, GestureDetector.OnGestureListener  {
             finish();
         }
     };
+    
+    private void drawRoutes(List<BDLocation> routes) {
+	for(int i=0; i<routes.size()-1; i++) {
+	    LatLng p1 = new LatLng(routes.get(i).getLatitude(), routes.get(i).getLongitude());
+	    LatLng p2 = new LatLng(routes.get(i+1).getLatitude(), routes.get(i+1).getLongitude());
+	    List<LatLng> points = new ArrayList<LatLng>();
+	    points.add(p1);
+	    points.add(p2);
+	    OverlayOptions ooPolyline = new PolylineOptions().width(10)
+			.color(0xAAFF0000).points(points);
+	    mBaiduMap.addOverlay(ooPolyline);
+	}
+    }
 }

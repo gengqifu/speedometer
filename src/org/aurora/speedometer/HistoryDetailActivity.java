@@ -33,8 +33,11 @@ import android.content.IntentFilter;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HistoryDetailActivity extends Activity {
     private static final String TAG = "HistoryDetailActivity";
@@ -47,6 +50,7 @@ public class HistoryDetailActivity extends Activity {
     private TextView mRestTimeView;
     
     private long mEndtime;
+    private long mStarttime;
     private Record mRecord;
     
     private DbAdapter mDbAdapter;
@@ -55,6 +59,7 @@ public class HistoryDetailActivity extends Activity {
     //private BaiduMap mBaiduMap;
     //private LocationClient mLocationClient = null;
     //private BDLocationListener myListener = new MyLocationListener();
+    private ImageView mImageView;
     boolean isFirstLoc = true;// 是否首次定位
 
     @Override
@@ -79,6 +84,8 @@ public class HistoryDetailActivity extends Activity {
 	mLocationClient.setLocOption(option);
 	mLocationClient.start();*/
 	
+	mImageView = (ImageView) findViewById(R.id.record_map);
+	
 	mDbAdapter = new DbAdapter(this);
 	mDbAdapter.open();
 	
@@ -101,6 +108,7 @@ public class HistoryDetailActivity extends Activity {
         mEndtime = Long.valueOf(bundle.getString("endtime"));
         Log.d(TAG, "mEndtime - " + mEndtime);
         getRecord(mEndtime);
+        mStarttime = mRecord.getStartTime();
         
         showRecordDetail(mEndtime);
     }
@@ -125,6 +133,20 @@ public class HistoryDetailActivity extends Activity {
         super.onResume();  
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理  
         //mMapView.onResume();
+        
+        mImageView.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View v) {
+        	Log.d(TAG, "image view click");
+        	Toast.makeText(HistoryDetailActivity.this, "image view click", Toast.LENGTH_SHORT).show();
+        	Intent intent = new Intent(HistoryDetailActivity.this, MapActivity.class);
+        	Bundle bundle = new Bundle();
+        	bundle.putBoolean("history", true);
+        	bundle.putString("starttime", Long.toString(mStarttime));
+        	intent.putExtras(bundle);
+        	startActivity(intent);
+            }
+        });
     }
     
     @Override  
