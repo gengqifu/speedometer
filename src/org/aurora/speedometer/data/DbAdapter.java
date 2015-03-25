@@ -19,7 +19,7 @@ public class DbAdapter
 {
     private final static String TAG = "DbAdapter";
     
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "speedometer.db";
     
     public static final String COLUMN_NAME_ID = "_id";
@@ -78,13 +78,13 @@ public class DbAdapter
 		    ")";
 	
     private static final String SQL_DELETE_RECORD_TABLE = 
-	    "DROP TABLE IF EXIST " + RECORD_TABLE;
+	    "DROP TABLE IF EXISTS " + RECORD_TABLE;
     
     private static final String SQL_DELETE_TOTAL_TABLE = 
-	    "DROP TABLE IF EXIST " + TOTAL_TABLE;
+	    "DROP TABLE IF EXISTS " + TOTAL_TABLE;
     
     private static final String SQL_DELETE_ROUTE_TABLE = 
-	    "DROP TABLE IF EXIST " + ROUTE_TABLE;
+	    "DROP TABLE IF EXISTS " + ROUTE_TABLE;
     
     // A list to store records summary info query from db
     String[] mRecordList ={
