@@ -266,6 +266,11 @@ public class DbAdapter
 	return route;
     }
     
+    public void delRoute(long starttime) {
+	Log.d(TAG, "endtime - " + starttime);
+	mDb.execSQL("DELETE FROM route WHERE starttime=" + starttime);
+    }
+    
     public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	public DatabaseHelper(Context context) {

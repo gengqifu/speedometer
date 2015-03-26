@@ -69,6 +69,8 @@ public class HistoryDetailActivity extends Activity {
     private UiSettings mUiSettings;
     
     private MyOnMapClickListener mOnMapClickListener = new MyOnMapClickListener();
+    
+    boolean mShowSaveButton = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +108,8 @@ public class HistoryDetailActivity extends Activity {
 	
 	Intent intent=getIntent();  
         Bundle bundle=intent.getExtras();
-        boolean showSaveButton = bundle.getBoolean("showSaveButton");
-        if( showSaveButton ) {
+        mShowSaveButton = bundle.getBoolean("showSaveButton");
+        if( mShowSaveButton ) {
             mSaveButton.setVisibility(View.VISIBLE);
         } else {
             mSaveButton.setVisibility(View.GONE);
@@ -229,10 +231,23 @@ public class HistoryDetailActivity extends Activity {
     }
     
     public void discardRecord(View view) {
+	if( !mShowSaveButton ) {
+	    Total total = mDbAdapter.getTotal();
+	    total.setDistance(total.getDistance() - mRecord.getDistance());
+	    total.setTime(total.getTime() - mRecord.getRunningTime());
+	    total.setTimes(total.getTimes() - 1);
+	    long newRowId = mDbAdapter.updateTotal(total);
+	}
+	mDbAdapter.delRoute(mStarttime);
 	mDbAdapter.delRecord(mEndtime);
 	
-	Intent intent = new Intent(HistoryDetailActivity.this, SpeedometerActivity.class);
-	startActivity(intent);
+	if( mShowSaveButton ) {
+	    Intent intent = new Intent(HistoryDetailActivity.this, SpeedometerActivity.class);
+	    startActivity(intent);
+	} else {
+	    Intent intent = new Intent(HistoryDetailActivity.this, HistoryActivity.class);
+	    startActivity(intent);
+	}
     }
     
     public void shareRecord(View view) {
