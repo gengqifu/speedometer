@@ -260,7 +260,6 @@ public class DbAdapter
 		location.setLongitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_NAME_ROUTE_LNG)));
 		location.setLatitude(cursor.getDouble(cursor.getColumnIndex(COLUMN_NAME_ROUTE_LAT)));
 		route.add(location);
-		Log.d(TAG, "lng: " + location.getLongitude() + ", lat: " + location.getLatitude());
 	    } while( cursor.moveToNext() );
 	}
 	

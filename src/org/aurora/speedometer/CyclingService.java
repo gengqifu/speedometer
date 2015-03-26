@@ -236,6 +236,8 @@ public class CyclingService extends Service implements
 	initialize();
 	
 	Log.d(TAG, "insert total, new RowId " + newRowId);
+	Intent intent = new Intent("org.aurora.speedometer.stopRecord");
+	sendBroadcast(intent);
     }
     
     public void initialize() {

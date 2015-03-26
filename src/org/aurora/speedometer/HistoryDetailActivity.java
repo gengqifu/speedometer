@@ -16,13 +16,17 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
+import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.nplatform.comapi.basestruct.GeoPoint;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -55,23 +59,27 @@ public class HistoryDetailActivity extends Activity {
     
     private DbAdapter mDbAdapter;
     
-    //private MapView mMapView = null;
-    //private BaiduMap mBaiduMap;
-    //private LocationClient mLocationClient = null;
+    private MapView mMapView = null;
+    private BaiduMap mBaiduMap;
+    private LocationClient mLocationClient = null;
     //private BDLocationListener myListener = new MyLocationListener();
-    private ImageView mImageView;
+    //private ImageView mImageView;
     boolean isFirstLoc = true;// 是否首次定位
+    
+    private UiSettings mUiSettings;
+    
+    private MyOnMapClickListener mOnMapClickListener = new MyOnMapClickListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	//SDKInitializer.initialize(getApplicationContext());
+	SDKInitializer.initialize(getApplicationContext());
 	setContentView(R.layout.activity_history_detail);
-	/*
+	
 	// 地图初始化
 	mMapView = (MapView) findViewById(R.id.record_map);
 	mBaiduMap = mMapView.getMap();
-	// 开启定位图层
+	/*// 开启定位图层
 	mBaiduMap.setMyLocationEnabled(true);
 	// 定位初始化
 	mLocationClient = new LocationClient(this);
@@ -84,7 +92,7 @@ public class HistoryDetailActivity extends Activity {
 	mLocationClient.setLocOption(option);
 	mLocationClient.start();*/
 	
-	mImageView = (ImageView) findViewById(R.id.record_map);
+	//mImageView = (ImageView) findViewById(R.id.record_map);
 	
 	mDbAdapter = new DbAdapter(this);
 	mDbAdapter.open();
@@ -109,6 +117,7 @@ public class HistoryDetailActivity extends Activity {
         Log.d(TAG, "mEndtime - " + mEndtime);
         getRecord(mEndtime);
         mStarttime = mRecord.getStartTime();
+        Log.d(TAG, "mStarttime: " + mStarttime);
         
         showRecordDetail(mEndtime);
     }
@@ -125,16 +134,41 @@ public class HistoryDetailActivity extends Activity {
 	Log.d(TAG, "onDestroy");
 	super.onDestroy();
 	//在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理  
-        //mMapView.onDestroy();
+        mMapView.onDestroy();
     }
     
     @Override  
     protected void onResume() {  
         super.onResume();  
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理  
-        //mMapView.onResume();
+        mMapView.onResume();
         
-        mImageView.setOnClickListener(new OnClickListener(){
+        mBaiduMap.setOnMapClickListener(mOnMapClickListener);
+        
+        mMapView.showZoomControls(false);
+        mUiSettings = mBaiduMap.getUiSettings();
+        
+        mUiSettings.setZoomGesturesEnabled(false); // 禁用地图缩放
+        mUiSettings.setScrollGesturesEnabled(false); // 禁用地图平移
+        mUiSettings.setRotateGesturesEnabled(false); // 禁用地图旋转
+        mUiSettings.setOverlookingGesturesEnabled(false); // 禁用地图俯视
+        
+        List<BDLocation> routes = mDbAdapter.getRoute(mStarttime);
+        if( routes.size() > 0 ) {
+            LatLng cenpt = new LatLng(routes.get(0).getLatitude(), routes.get(0).getLongitude());
+            MapStatus mMapStatus = new MapStatus.Builder()
+            	.target(cenpt)
+            	.zoom(14)
+            	.build();
+            MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+            mBaiduMap.setMapStatus(mMapStatusUpdate);
+            
+            drawRoutes(routes);
+        }
+        
+        
+        
+        /*mMapView.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View v) {
         	Log.d(TAG, "image view click");
@@ -142,11 +176,12 @@ public class HistoryDetailActivity extends Activity {
         	Intent intent = new Intent(HistoryDetailActivity.this, MapActivity.class);
         	Bundle bundle = new Bundle();
         	bundle.putBoolean("history", true);
+        	Log.d(TAG, "mStarttime: " + mStarttime);
         	bundle.putString("starttime", Long.toString(mStarttime));
         	intent.putExtras(bundle);
         	startActivity(intent);
             }
-        });
+        });*/
     }
     
     @Override  
@@ -228,4 +263,37 @@ public class HistoryDetailActivity extends Activity {
 	    }
 	}
     }*/
+    
+    private void drawRoutes(List<BDLocation> routes) {
+	for(int i=0; i<routes.size()-1; i++) {
+	    LatLng p1 = new LatLng(routes.get(i).getLatitude(), routes.get(i).getLongitude());
+	    LatLng p2 = new LatLng(routes.get(i+1).getLatitude(), routes.get(i+1).getLongitude());
+	    List<LatLng> points = new ArrayList<LatLng>();
+	    points.add(p1);
+	    points.add(p2);
+	    OverlayOptions ooPolyline = new PolylineOptions().width(10)
+			.color(0xAAFF0000).points(points);
+	    mBaiduMap.addOverlay(ooPolyline);
+	}
+    }
+    
+    private class MyOnMapClickListener implements BaiduMap.OnMapClickListener {
+	@Override
+	public void onMapClick(LatLng point) {
+	    Log.d(TAG, "Map view click");
+	    Toast.makeText(HistoryDetailActivity.this, "image view click", Toast.LENGTH_SHORT).show();
+	    Intent intent = new Intent(HistoryDetailActivity.this, MapActivity.class);
+	    Bundle bundle = new Bundle();
+	    bundle.putBoolean("history", true);
+	    Log.d(TAG, "mStarttime: " + mStarttime);
+	    bundle.putString("starttime", Long.toString(mStarttime));
+	    intent.putExtras(bundle);
+	    startActivity(intent);
+	}
+	
+	@Override
+	public boolean onMapPoiClick(MapPoi poi) {
+	    return true;
+	}
+    }
 }

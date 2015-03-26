@@ -1,5 +1,9 @@
 package org.aurora.speedometer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +13,7 @@ import org.aurora.speedometer.utils.Util;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -36,6 +41,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -71,18 +77,24 @@ OnTouchListener, GestureDetector.OnGestureListener  {
     
     private long mStarttime;
     private boolean isHistory = false;
+    
+    private MySnapshotReadyCallback mSnapshotReadyCallback = new MySnapshotReadyCallback();
+    
+    private MsgReceiver msgReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+	Log.d(TAG, "onCreate");
 	super.onCreate(savedInstanceState);
 	SDKInitializer.initialize(getApplicationContext());
 	setContentView(R.layout.activity_map);
 	
 	Intent intent=getIntent();  
         Bundle bundle=intent.getExtras();
-        mStarttime = bundle.getLong("starttime", 0L);
+        mStarttime = Long.valueOf(bundle.getString("starttime", "0"));
         isHistory = bundle.getBoolean("history", false);
         Log.d(TAG, "isHistory: " + isHistory);
+        Log.d(TAG, "mStarttime: " + mStarttime);
 	
 //	mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
 //	mLocationClient.registerLocationListener( myListener );    //注册监听函数
@@ -116,6 +128,11 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 	
 	mDbAdapter = new DbAdapter(this);
 	mDbAdapter.open();
+	
+	msgReceiver = new MsgReceiver();  
+        IntentFilter intentFilter = new IntentFilter();  
+        intentFilter.addAction("org.aurora.speedometer.stopRecord");  
+        registerReceiver(msgReceiver, intentFilter);
     }
 
     /*@Override
@@ -134,12 +151,23 @@ OnTouchListener, GestureDetector.OnGestureListener  {
     
     @Override  
     protected void onResume() {  
+	Log.d(TAG, "onResume");
         super.onResume();  
         //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理  
         mMapView.onResume();
         if( isHistory ) {
             List<BDLocation> routes = mDbAdapter.getRoute(mStarttime);
-            drawRoutes(routes);
+            if( routes.size() > 0 ) {
+                LatLng cenpt = new LatLng(routes.get(0).getLatitude(), routes.get(0).getLongitude());
+                MapStatus mMapStatus = new MapStatus.Builder()
+                	.target(cenpt)
+                	.zoom(15)
+                	.build();
+                MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+                mBaiduMap.setMapStatus(mMapStatusUpdate);
+                
+                drawRoutes(routes);
+            }
         }
         
         //在当前的activity中注册广播
@@ -247,7 +275,7 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 
     @Override 
     public boolean onKeyDown(int keyCode, KeyEvent event) { 
-	if ((keyCode == KeyEvent.KEYCODE_BACK)) { 
+	if ( (keyCode == KeyEvent.KEYCODE_BACK) && !isHistory ) {
 	    Log.d(TAG, "按下了back键 onKeyDown()");
 	    Intent intent = new Intent();
 	    intent.setAction(Util.EXIT_ACTION); // 退出动作
@@ -280,5 +308,47 @@ OnTouchListener, GestureDetector.OnGestureListener  {
 			.color(0xAAFF0000).points(points);
 	    mBaiduMap.addOverlay(ooPolyline);
 	}
+    }
+    
+    private class MySnapshotReadyCallback implements BaiduMap.SnapshotReadyCallback {
+	@Override
+	public void onSnapshotReady(Bitmap snapshot) {
+	    Log.d(TAG, "onSnapshotReady");
+	    File dir = new File("/data/data/org.aurora.speedometer/snapshot/");
+	    if( !dir.exists() ) {
+		dir.mkdirs();
+	    }
+	    File f = new File("/data/data/org.aurora.speedometer/snapshot/", mStarttime+ ".bmp");
+	    if (f.exists()) {
+		f.delete();
+	    }
+	    try {
+		FileOutputStream out = new FileOutputStream(f);
+		snapshot.compress(Bitmap.CompressFormat.PNG, 90, out);
+		out.flush();
+		out.close();
+	    } catch(FileNotFoundException e) {
+		Log.e(TAG,"FileNotFoundException");
+		e.printStackTrace();
+	    } catch (IOException e) {
+		Log.i(TAG,"IOException");
+		e.printStackTrace();
+	    }
+	}
+    }
+    
+    public void takeSnapshot() {
+	Log.d(TAG, "takeSnapshot()");
+	Log.d(TAG, "baiduMap: " + mMapView.getMap());
+	mBaiduMap.snapshot(mSnapshotReadyCallback);
+    }
+    
+    public class MsgReceiver extends BroadcastReceiver{
+	@Override  
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG,"stopRecord intent receiver");
+            mLocationClient.stop();
+            takeSnapshot();
+        }
     }
 }

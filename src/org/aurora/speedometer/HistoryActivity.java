@@ -26,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.GestureDetector;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -68,22 +69,6 @@ public class HistoryActivity extends Activity implements
 	
 	mDbAdapter = new DbAdapter(this);
 	mDbAdapter.open();
-	
-	mHistoryListView = (ListView)findViewById(R.id.history_list);
-	
-	mHistoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-	    @Override
-	    public void onItemClick(AdapterView<?> arg0,View arg1, int arg2, long arg3) {
-		TextView endtimeView = (TextView)findViewById(R.id.text3);
-		Log.d(TAG, "endtimeView - " + endtimeView.getText().toString());
-		Intent intent = new Intent(HistoryActivity.this, HistoryDetailActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putBoolean("showSaveButton", false);
-		bundle.putString("endtime", endtimeView.getText().toString());
-		intent.putExtras(bundle);
-		startActivity(intent);
-	    }
-	});
     }
     
     @Override
@@ -94,9 +79,30 @@ public class HistoryActivity extends Activity implements
         filter.addAction(Util.EXIT_ACTION);
         this.registerReceiver(this.broadcastReceiver, filter);
         
-     // Show record summary list
+        mHistoryListView = (ListView)findViewById(R.id.history_list);
+	
+        // Show record summary list
      	showHistorySummary();
      	showHistoryList();
+	
+	mHistoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	    @Override
+	    public void onItemClick(AdapterView<?> arg0,View arg1, int arg2, long arg3) {
+		Adapter adapter=arg0.getAdapter();
+		Map<String,String> map = (Map<String, String>) adapter.getItem(arg2);
+		String endtime = map.get("endtime");
+		Log.d(TAG, "endtime: " + endtime);
+		//TextView endtimeView = (TextView)findViewById(R.id.text3);
+		//Log.d(TAG, "endtimeView - " + endtimeView.getText().toString());
+		//Log.d(TAG, "summary: " + ((TextView)findViewById(R.id.text1)).getText().toString());
+		Intent intent = new Intent(HistoryActivity.this, HistoryDetailActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putBoolean("showSaveButton", false);
+		bundle.putString("endtime", endtime);
+		intent.putExtras(bundle);
+		startActivity(intent);
+	    }
+	});
     }
 
     @Override
@@ -182,6 +188,7 @@ public class HistoryActivity extends Activity implements
 	    long runningTime = record.getRunningTime();
 	    String runningTimeStr = Util.formatTime((int)runningTime); // May lost accuracy
 	    Long endTime = record.getEndTime();
+	    Log.d(TAG, "endTime: " + endTime);
 	    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 	    String date = sdf.format(new Date(endTime));
 	    String summary = getString(R.string.cycling_run) + df.format(distance) + getString(R.string.cycling_km) +
